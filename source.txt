@@ -1,24 +1,22 @@
-program
-var dim aa1, aa2, ii1 %
-dim dd12 !
-dim bb1 $
-begin
-aa1 ass 12;
-for ii1 ass 0 to ass < 10 do
-	aa1 ass aa1 + 1;
-if (aa1 > 10)
-	aa1 ass 10;
-elseif (aa1 < 5)
-	aa1 ass 5;
-else
-	aa1 ass 7;
-do while aa1 > 0
-begin
-	aa1 ass aa1 - 1;
-	aa2 ass aa2 + aa1;
-end
-loop
-read (dd12, bb1);
-output (aa2)
 /* this is a comment */
-end.
+dim aa1, aa2 %;
+aa1 ass 12;
+aa2 ass 12.34;
+if (aa1 = aa2)
+    aa1 ass aa2;
+elseif (aa1 >= aa2)
+    aa1 ass aa1 + 5;
+else
+    aa2 ass aa1;
+end
+
+for (ii1 ass 1 to ii1 < 4)
+
+end
+
+do while ( )
+
+end
+
+read ( )
+output ( )
