@@ -1,22 +1,5 @@
-/* this is a comment */
-dim aa1, aa2 %;
-aa1 ass 12;
-aa2 ass 12.34;
-if (aa1 = aa2)
-    aa1 ass aa2;
-elseif (aa1 >= aa2)
-    aa1 ass aa1 + 5;
-else
-    aa2 ass aa1;
+if (aa1)
+begin
+aa1 = aa1+1
+ggggg4
 end
-
-for (ii1 ass 1 to ii1 < 4)
-
-end
-
-do while ( )
-
-end
-
-read ( )
-output ( )

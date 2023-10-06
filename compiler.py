@@ -1,43 +1,47 @@
 import sys
 from sys import argv
-import re
 
 decrypt = ['NUM', 'REAL', 'ID', 'IF', 'ELSE', 'ELSEIF', 'FOR', 'TO', 'DO', 'WHILE', 'LPAR', 'RPAR', 'PLUS',
-           'MINUS', 'GREAT', 'GREATEQUAL', 'LESS', 'LESSEQUAL', 'EQUAL', 'NOTEQUAL', 'MULTIPLY', 'DIVIDE', 'SEMICOLON',
-           'DOT', 'COMMA', 'BEGIN', 'END', 'ASSUME', 'DIM', 'AND', 'OR', 'NOT', 'TRUE', 'FALSE', 'READ',
+           'MINUS', 'GREAT', 'GREAT_EQUAL', 'LESS', 'LESS_EQUAL', 'EQUAL', 'NOTEQUAL', 'MULTIPLY', 'DIVIDE',
+           'SEMICOLON', 'DOT', 'COMMA', 'BEGIN', 'END', 'ASSUME', 'DIM', 'AND', 'OR', 'NOT', 'TRUE', 'FALSE', 'READ',
            'OUTPUT', 'INT', 'FLOAT', 'BOOL', 'EOF']
 
 
 class Lexer:
-    (NUM, REAL, ID, IF, ELSE, ELSEIF, FOR, TO, DO, WHILE, LPAR, RPAR, PLUS, MINUS, GREAT, GREATEQUAL, LESS, LESSEQUAL,
+    (NUM, REAL, ID, IF, ELSE, ELSEIF, FOR, TO, DO, WHILE, LPAR, RPAR, PLUS, MINUS, GREAT, GREAT_EQUAL, LESS, LESS_EQUAL,
      EQUAL, NOTEQUAL, MULTIPLY, DIVIDE, SEMICOLON, DOT, COMMA, BEGIN, END, ASSUME, DIM, AND, OR,
      NOT, TRUE, FALSE, READ, OUTPUT, INT, FLOAT, BOOL, EOF) = range(40)
 
-    SYMBOLS = {';': SEMICOLON, '+': PLUS, '-': MINUS, '*': MULTIPLY, '/': DIVIDE, '>': GREAT, '>=': GREATEQUAL, '<': LESS, '<=': LESSEQUAL, '=': EQUAL,
-               '!=': NOTEQUAL, '.': DOT, ',': COMMA, '(': LPAR, ')': RPAR, '%': INT, "!": FLOAT, '$': BOOL}
+    SYMBOLS = {';': SEMICOLON, '+': PLUS, '-': MINUS, '*': MULTIPLY, '/': DIVIDE, '>': GREAT, '>=': GREAT_EQUAL,
+               '<': LESS, '<=': LESS_EQUAL, '=': EQUAL, '!=': NOTEQUAL, '.': DOT, ',': COMMA, '(': LPAR, ')': RPAR,
+               '%': INT, "!": FLOAT, '$': BOOL}
 
     WORDS = {'if': IF, 'else': ELSE, 'elseif': ELSEIF, 'for': FOR, 'to': TO, 'do': DO, 'while': WHILE,
              'begin': BEGIN, 'end': END, 'ass': ASSUME, 'dim': DIM, 'read': READ,
              'output': OUTPUT, 'and': AND, 'or': OR, 'not': NOT, 'true': TRUE, 'false': FALSE}
 
     char = ' '
+    lines_count = 1
 
-    def __init__(self):
+    def __init__(self, input_stream):
         self.symbol = None
         self.value = None
+        self.input_stream = input_stream
+        self.error = False
+        self.error_msg = "OK"
 
-    @staticmethod
-    def error(msg):
-        print('Lexer error: ', msg)
-        sys.exit(1)
+    def set_error(self, msg):
+        self.error = True
+        self.error_msg = msg
 
     # def error(self, msg):
     #     print('Lexer error: ', msg)
     #     sys.exit(1)
 
     def getc(self):
-        global input_stream
-        self.char = input_stream.read(1)
+        self.char = self.input_stream.read(1)
+        if self.char == "\n":
+            self.lines_count += 1
         # self.char = sys.stdin.read(1)
 # /* */ != <= >=
     def next_token(self):
@@ -51,25 +55,24 @@ class Lexer:
             elif self.char in Lexer.SYMBOLS:
                 new_symbol = self.char
                 self.getc()
-                if self.char in Lexer.SYMBOLS and self.char != Lexer.MINUS:
-                    new_symbol += self.char
-                    if new_symbol == '/*':
-                        out_char = ''
-                        while out_char != '*/':
-                            self.getc()
-                            if len(self.char) == 0:
-                                self.symbol = Lexer.EOF
-                                break
-                            out_char += self.char
-                            if out_char == '*' or out_char == '*/':
-                                continue
-                            out_char = ''
-                        self.getc()
-                    else:
-                        self.symbol = Lexer.SYMBOLS[self.char]
-                        self.getc()
-                else:
+                new_symbol += self.char
+                if new_symbol in Lexer.SYMBOLS:
                     self.symbol = Lexer.SYMBOLS[new_symbol]
+                    self.getc()
+                elif new_symbol == '/*':
+                    out_char = ''
+                    while out_char != '*/':
+                        self.getc()
+                        if len(self.char) == 0:
+                            self.symbol = Lexer.EOF
+                            break
+                        out_char += self.char
+                        if out_char == '*' or out_char == '*/':
+                            continue
+                        out_char = ''
+                    self.getc()
+                else:
+                    self.symbol = Lexer.SYMBOLS[new_symbol[0]]
             elif self.char.isdigit():
                 intval = 0
                 while self.char.isdigit():
@@ -102,11 +105,11 @@ class Lexer:
                         identifier += self.char
                         self.getc()
                     self.symbol = Lexer.ID
-                    self.value = identifier  # !!!!
+                    self.value = identifier
                 else:
-                    self.error('Unknown identifier: ' + identifier)
+                    self.set_error('Unknown identifier "' + identifier + '" in line ' + str(self.lines_count))
             else:
-                self.error('Unexpected symbol: ' + self.char)
+                self.set_error('Unexpected symbol "' + self.char + '" in line ' + str(self.lines_count))
 
 
 # source_file: str = open(source_path, "r").read()
@@ -114,7 +117,6 @@ class Lexer:
 #
 # for i in range(len(tokens)):
 #     print(tokens[i], end=" | ")
-
 
 
 if __name__ == "__main__":
@@ -127,10 +129,11 @@ if __name__ == "__main__":
 
     input_stream = open(source_path, 'r')
 
-    lex = Lexer()
+    lex = Lexer(input_stream)
     while lex.symbol != Lexer.EOF:
         lex.next_token()
         if lex.symbol == Lexer.ID or lex.symbol == Lexer.NUM or lex.symbol == Lexer.REAL:
             print(decrypt[lex.symbol], lex.value)
         else:
             print(decrypt[lex.symbol])
+
