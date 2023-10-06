@@ -31,8 +31,9 @@ class Lexer:
         self.error_msg = "OK"
 
     def set_error(self, msg):
+        print("ggg")
         self.error = True
-        self.error_msg = msg
+        self.error_msg = "Lexer error: " + msg
 
     # def error(self, msg):
     #     print('Lexer error: ', msg)
@@ -108,8 +109,10 @@ class Lexer:
                     self.value = identifier
                 else:
                     self.set_error('Unknown identifier "' + identifier + '" in line ' + str(self.lines_count))
+                    break
             else:
                 self.set_error('Unexpected symbol "' + self.char + '" in line ' + str(self.lines_count))
+                break
 
 
 # source_file: str = open(source_path, "r").read()
