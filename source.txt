@@ -1,5 +1,9 @@
-if (aa1)
-begin
-aa1 = aa1+1
-ggggg4
+dim aa1, bb2 %;
+if (aa1 >= 5)
+    aa1 ass 14.14
+else
+    bb2 ass 0
+end
+
+
 end

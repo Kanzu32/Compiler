@@ -1,0 +1,21 @@
+P L Z Z1 I I1 S E1 E N V X D D1 D2 C T B
+; + - * / > >= < <= = != . , ( ) % ! $ 0 1 2 3 4 5 6 7 8 9 a b c d e f g h i j k l m n o p q r s t u v w x y z ?
+if else elseif for to do while begin end ass dim read output and or not true false
+P : L end
+L : S ; L | Z ; L | ?
+Z : dim I I1 T
+Z1 : Z Z1 | ?
+I : C C D1
+I1 : , I I1 | ?
+S : I ass X | begin L end | if ( E ) L E1 end | if ( E ) L E1 else L end | do while ( E ) L end | for ( I ass N to N ) L end | read ( I1 ) | output ( I1 )
+E1 : elseif ( E ) L | ?
+E : X | X = X | X < X | X <= X | X > X | X >= X | X and X | X or X | not X
+N : D1 | D2
+V : N | B
+X : V | I
+D : 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+D1 : D | D D1
+D2 : D1 . D1
+C : a | b | c | d | e | f | g | h | i | j | k | l | m | n | o | p | q | r | s | t | u | v | w | x | y | z
+T : % | ! | $
+B : true | false

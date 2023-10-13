@@ -31,7 +31,6 @@ class Lexer:
         self.error_msg = "OK"
 
     def set_error(self, msg):
-        print("ggg")
         self.error = True
         self.error_msg = "Lexer error: " + msg
 

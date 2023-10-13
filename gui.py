@@ -1,6 +1,6 @@
 import PySimpleGUI as sg
 import io
-import compiler
+import lexer
 
 layout = [[sg.Text("Choose a file: "), sg.Input(), sg.FileBrowse(key="-IN-FILE-"), sg.Button("Load"), sg.Button('Compile', size=(12, 2), key="_COMPILE_")],
           [sg.Text("Source code:", size=(46, 1)), sg.Text("Lexemes:", size=(45, 1))],
@@ -12,17 +12,17 @@ window = sg.Window('Compiler', layout)
 
 
 def compile_stream(stream):
-    lex = compiler.Lexer(stream)
+    lex = lexer.Lexer(stream)
     res = ""
-    while lex.symbol != compiler.Lexer.EOF:
+    while lex.symbol != lexer.Lexer.EOF:
         lex.next_token()
         if lex.error:
             window["-ERROR-"].update(lex.error_msg)
             break
-        if lex.symbol == compiler.Lexer.ID or lex.symbol == compiler.Lexer.NUM or lex.symbol == compiler.Lexer.REAL:
-            res += "(" + compiler.decrypt[lex.symbol] + "," + str(lex.value) + ")\n"
+        if lex.symbol == lexer.Lexer.ID or lex.symbol == lexer.Lexer.NUM or lex.symbol == lexer.Lexer.REAL:
+            res += "(" + lexer.decrypt[lex.symbol] + "," + str(lex.value) + ")\n"
         else:
-            res += "(" + compiler.decrypt[lex.symbol] + ")\n"
+            res += "(" + lexer.decrypt[lex.symbol] + ")\n"
     window["-OUTPUT-"].update(res)
     window["-ERROR-"].update(lex.error_msg)
 
