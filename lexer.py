@@ -34,9 +34,6 @@ class Lexer:
         self.error = True
         self.error_msg = "Lexer error: " + msg
 
-    # def error(self, msg):
-    #     print('Lexer error: ', msg)
-    #     sys.exit(1)
 
     def getc(self):
         self.char = self.input_stream.read(1)
@@ -91,9 +88,9 @@ class Lexer:
                 else:
                     self.value = intval
                     self.symbol = Lexer.NUM
-            elif self.char.isalpha():
+            elif 'a' <= self.char <= 'z':
                 identifier = ''
-                while self.char.isalpha():
+                while 'a' <= self.char <= 'z':
                     identifier += self.char.lower()
                     self.getc()
                 if identifier in Lexer.WORDS:
@@ -129,12 +126,15 @@ if __name__ == "__main__":
     else:
         source_path = "source.txt"
 
-    input_stream = open(source_path, 'r')
+    stream = open(source_path, 'r')
 
-    lex = Lexer(input_stream)
+    lex = Lexer(stream)
     while lex.symbol != Lexer.EOF:
         lex.next_token()
-        if lex.symbol == Lexer.ID or lex.symbol == Lexer.NUM or lex.symbol == Lexer.REAL:
+        if lex.error:
+            print(lex.error_msg)
+            break
+        elif lex.symbol == Lexer.ID or lex.symbol == Lexer.NUM or lex.symbol == Lexer.REAL:
             print(decrypt[lex.symbol], lex.value)
         else:
             print(decrypt[lex.symbol])

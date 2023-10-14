@@ -1,0 +1,42 @@
+P L Z I1 S I2 E1 E A N I
+; + - * / > >= < <= = != . , ( ) ? if else elseif for to do while begin end ass dim read output and or not ID TYPE BOOL NUM
+P : L end
+L : S L | Z L | ?
+Z : dim ID I1 TYPE ;
+I1 : , ID I1 | ?
+S : ID ass A ; | begin L end | if ( E ) L E1 end | if ( E ) L E1 else L end | do while ( E ) L end | for ( I ass N to NUM ) L end | read ( I2 ) ; | output ( I2 ) ;
+I2 : ID I1
+E1 : elseif ( E ) L | ?
+E : NUM | BOOL | ID | NUM = NUM | NUM != NUM | NUM < NUM | NUM <= NUM | NUM > NUM | NUM >= NUM | ID = ID | ID != ID | ID < ID | ID <= ID | ID > ID | ID >= ID | NUM = ID | NUM != ID | NUM < ID | NUM <= ID | NUM > ID | NUM >= ID | ID = NUM | ID != NUM | ID < NUM | ID <= NUM | ID > NUM | ID >= NUM | ID and ID | ID or ID | not ID | BOOL and ID | BOOL or ID | not BOOL | ID and BOOL | ID or BOOL | BOOL and BOOL | BOOL or BOOL
+A : NUM | BOOL | ID | NUM + NUM | NUM - NUM | NUM * NUM | NUM / NUM | ID + ID | ID - ID | ID * ID | ID / ID | NUM + ID | NUM - ID | NUM * ID | NUM / ID | ID + NUM | ID - NUM | ID * NUM | ID / NUM
+N : NUM
+I : ID
+
+P L Z I1 S I2 E1 E A N I
+; + - * / > >= < <= = != . , ( ) ? if else elseif for to do while begin end ass dim read output and or not ID TYPE BOOL NUM
+P : L end
+L : S L | Z ; L | ?
+Z : dim ID I1 TYPE ; | I ass A ; | read ( I2 ) ; | output ( I2 ) ;
+I1 : , ID I1 | ?
+S : begin L end | if ( E ) L E1 end | if ( E ) L E1 else L end | do while ( E ) L end | for ( I ass N to N ) L end
+I2 : ID I1
+E1 : elseif ( E ) L | ?
+E : NUM | BOOL | ID | NUM = NUM | NUM != NUM | NUM < NUM | NUM <= NUM | NUM > NUM | NUM >= NUM | ID = ID | ID != ID | ID < ID | ID <= ID | ID > ID | ID >= ID | NUM = ID | NUM != ID | NUM < ID | NUM <= ID | NUM > ID | NUM >= ID | ID = NUM | ID != NUM | ID < NUM | ID <= NUM | ID > NUM | ID >= NUM | ID and ID | ID or ID | not ID | BOOL and ID | BOOL or ID | not BOOL | ID and BOOL | ID or BOOL | BOOL and BOOL | BOOL or BOOL
+A : NUM | BOOL | ID | NUM + NUM | NUM - NUM | NUM * NUM | NUM / NUM | ID + ID | ID - ID | ID * ID | ID / ID | NUM + ID | NUM - ID | NUM * ID | NUM / ID | ID + NUM | ID - NUM | ID * NUM | ID / NUM
+N : NUM
+I : ID
+
+P L Z I1 S I2 E1 E A X N I
+; + - * / > >= < <= = != . , ( ) ? if else elseif for to do while begin end ass dim read output and or not ID TYPE BOOL NUM
+P : L end
+L : S L | Z ; L | ?
+Z : dim ID I1 TYPE ; | I ass A ; | read ( I2 ) ; | output ( I2 ) ;
+I1 : , ID I1 | ?
+S : begin L end | if ( E ) L E1 end | if ( E ) L E1 else L end | do while ( E ) L end | for ( I ass N to N ) L end
+I2 : ID I1
+E1 : elseif ( E ) L | ?
+E  : X | X = X | X < X | X <= X | X > X | X >= X | X and X | X or X | not X
+A : X | X + X | X - X | X * X | X / X
+X : NUM | ID | BOOL
+N : NUM
+I : ID

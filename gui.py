@@ -6,7 +6,7 @@ layout = [[sg.Text("Choose a file: "), sg.Input(), sg.FileBrowse(key="-IN-FILE-"
           [sg.Text("Source code:", size=(46, 1)), sg.Text("Lexemes:", size=(45, 1))],
           [sg.Multiline(s=(50, 30), key="-INPUT-"), sg.Multiline(s=(50, 30), disabled=True, key="-OUTPUT-")],
           [sg.Text("Errors:")],
-          [sg.Multiline(s=(50, 5), key="-ERROR-")]]
+          [sg.Multiline(s=(50, 3), key="-ERROR-", disabled=True)]]
 
 window = sg.Window('Compiler', layout)
 

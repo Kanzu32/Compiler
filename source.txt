@@ -5,5 +5,7 @@ else
     bb2 ass 0
 end
 
-
+aa1 ass bb2 / aa1;
+output (bb2);
+output (aa1);
 end
