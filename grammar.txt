@@ -1,35 +1,12 @@
-P L Z I1 S I2 E1 E A X
-; + - * / > >= < <= = != , ( ) { } ? if else elseif for to do while begin end ass dim read output and or not ID TYPE BOOL NUM
-P : L end
-L : S } L | Z ; L | ?
-Z : dim ID I1 TYPE | ID ass A | read ( I2 ) | output ( I2 )
-I1 : , ID I1 | ?
-S : { L | if ( E ) { L } E1 | if ( E ) { L } E1 else { L } | do while ( E ) { L } | for ( ID ass NUM to NUM ) { L }
-I2 : ID I1
-E1 : elseif ( E ) { L } | ?
-E  : X | X = X | X != X | X < X | X <= X | X > X | X >= X | X and X | X or X | not X
-A : X | X + X | X - X | X * X | X / X
-X : NUM | ID | BOOL
-
-
-if (bool)
-end
-
-if ()
-else
-end
-
-if ()
-elseif ()
-end
-
-if ()
-elseif ()
-...
-end
-
-if ()
-elseif ()
-...
-else
-end
+PROG CMD IDS EXPR ASSIGN FORCOND COND1 COND CALC ANY
+; + - * / > >= < <= = != , ( ) { } if else elseif for to do while end ass dim read output and or not ID TYPE BOOL NUM
+PROG : CMD end
+CMD : EXPR ; CMD | EXPR ;
+IDS : IDS , ID | ID
+EXPR : dim IDS TYPE | ASSIGN | read ( IDS ) | output ( IDS ) | if ( COND ) { CMD } | if ( COND ) { CMD } else { CMD } | if ( COND ) { CMD } COND1 | do while ( COND ) { CMD } | for ( FORCOND ) { CMD }
+ASSIGN : ID ass CALC
+FORCOND : ASSIGN to COND
+COND1 : elseif ( COND ) { CMD } else { CMD } | elseif ( COND ) { CMD } COND1 | elseif ( COND ) { CMD }
+COND  : NUM | ID | BOOL | ANY = ANY | ANY != ANY | ANY < ANY | ANY <= ANY | ANY > ANY | ANY >= ANY | ANY and ANY | ANY or ANY | not ANY
+CALC : NUM | ID | BOOL | ANY + ANY | ANY - ANY | ANY * ANY | ANY / ANY
+ANY : NUM | ID | BOOL

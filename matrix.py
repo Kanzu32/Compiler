@@ -166,7 +166,7 @@ class MatrixGenerator:
 
                             if i < len(item)-1 and item[i+1] in MatrixGenerator.T:  # x ai b y
                                 if self.operator_matrix[symbol].get(item[i+1]) is not None and self.operator_matrix[symbol][item[i+1]] != ORDER.EQUALS:
-                                    print("ОШИБКА", item[i:i+2], "x ai b y")
+                                    print("ОШИБКА", item[i:i+2], "x ai b y OLD:", self.operator_matrix[symbol][item[i+1]])
                                 # print(item[i:i + 2], "x ai b y")
                                 self.operator_matrix[symbol][item[i+1]] = ORDER.EQUALS
                             elif i < len(item)-2 and item[i+1] not in MatrixGenerator.T and item[i+2] in MatrixGenerator.T:  # x ai U b y
@@ -178,7 +178,7 @@ class MatrixGenerator:
                             if i < len(item)-1 and item[i+1] not in MatrixGenerator.T:  # x ai U y
                                 for L in self.t_lr.left[item[i+1]]:
                                     if L in MatrixGenerator.T:
-                                        if self.operator_matrix[symbol].get(item[i + 1]) is not None and self.operator_matrix[symbol][item[i + 1]] != ORDER.PRECEDED:
+                                        if self.operator_matrix[symbol].get(L) is not None and self.operator_matrix[symbol][L] != ORDER.PRECEDED:
                                             print("ОШИБКА", L, item[i:i + 2], "x ai U y")
                                         # print(L, item[i:i + 2], "x ai U y")
                                         self.operator_matrix[symbol][L] = ORDER.PRECEDED
@@ -187,7 +187,7 @@ class MatrixGenerator:
                             if i > 0 and item[i-1] not in MatrixGenerator.T:  # x U ai y
                                 for R in self.t_lr.right[item[i-1]]:
                                     if R in MatrixGenerator.T:
-                                        if self.operator_matrix[symbol].get(item[i - 1]) is not None and self.operator_matrix[symbol][item[i - 1]] != ORDER.FOLLOWS:
+                                        if self.operator_matrix[R].get(symbol) is not None and self.operator_matrix[R][symbol] != ORDER.FOLLOWS:
                                             print("ОШИБКА", R, item[i - 1:i + 1], "x U ai y")
                                         self.operator_matrix[R][symbol] = ORDER.FOLLOWS
                                         continue

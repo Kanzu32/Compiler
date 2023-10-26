@@ -1,8 +1,11 @@
-S F T E D C
-; if then else a := or xor and ( )
-S : F ;
-F : if E then T else F | if E then F | a := E
-T : if E then T else T | a := E
-E : E or D | E xor D | D
-D : D and C | C
-C : a | ( E )
+S T E
+( a * + )
+S : S + T | T
+T : T * E | E
+E : ( S ) | a
+
+/b/ ASSIGN ; ID ass ANY
+
+aa1 ass 45 * 10;
+
+bb2 ass aa1;
