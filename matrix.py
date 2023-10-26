@@ -51,8 +51,6 @@ class MatrixGenerator:
             self.t_lr.left[name] = []
             self.t_lr.right[name] = []
 
-        print(MatrixGenerator.T)
-
         for symbol in ["/b/", *MatrixGenerator.T, "/e/"]:
             self.operator_matrix[symbol] = {}
 
@@ -82,12 +80,12 @@ class MatrixGenerator:
                 first_symbol = None
                 last_symbol = None
                 for item in arr:
-                    # if item in MatrixGenerator.T:
-                    #     if first_t is None:
-                    #         first_t = item
-                    #         last_t = item
-                    #     else:
-                    #         last_t = item
+                    if item in MatrixGenerator.T:
+                        if first_t is None:
+                            first_t = item
+                            last_t = item
+                        else:
+                            last_t = item
 
                     if first_symbol is None:
                         first_symbol = item
@@ -95,11 +93,11 @@ class MatrixGenerator:
                     else:
                         last_symbol = item
 
-                # if last_t is not None:
-                #     if first_t not in self.t_lr.left[rule_name]:
-                #         self.t_lr.left[rule_name].append(first_t)
-                #     if last_t not in self.t_lr.right[rule_name]:
-                #         self.t_lr.right[rule_name].append(last_t)
+                if last_t is not None:
+                    if first_t not in self.t_lr.left[rule_name]:
+                        self.t_lr.left[rule_name].append(first_t)
+                    if last_t not in self.t_lr.right[rule_name]:
+                        self.t_lr.right[rule_name].append(last_t)
 
                 if last_symbol is not None:
                     if first_symbol not in self.symbols_lr.left[rule_name]:
@@ -132,18 +130,14 @@ class MatrixGenerator:
 
         for rule_name in self.rules.keys():  # алгоритм для терм симв
             for item in self.symbols_lr.left[rule_name]:
-                if item in MatrixGenerator.T and item not in self.t_lr.left[rule_name]:
-                    self.t_lr.left[rule_name].append(item)
-                elif item not in MatrixGenerator.T:
-                    for i in self.symbols_lr.left[item]:
+                if item not in MatrixGenerator.T:
+                    for i in self.t_lr.left[item]:
                         if i not in self.t_lr.left[rule_name] and i in MatrixGenerator.T:
                             self.t_lr.left[rule_name].append(i)
 
             for item in self.symbols_lr.right[rule_name]:
-                if item in MatrixGenerator.T and item not in self.t_lr.right[rule_name]:
-                    self.t_lr.right[rule_name].append(item)
-                elif item not in MatrixGenerator.T:
-                    for i in self.symbols_lr.right[item]:
+                if item not in MatrixGenerator.T:
+                    for i in self.t_lr.right[item]:
                         if i not in self.t_lr.right[rule_name] and i in MatrixGenerator.T:
                             self.t_lr.right[rule_name].append(i)
 
@@ -173,22 +167,25 @@ class MatrixGenerator:
                             if i < len(item)-1 and item[i+1] in MatrixGenerator.T:  # x ai b y
                                 if self.operator_matrix[symbol].get(item[i+1]) is not None and self.operator_matrix[symbol][item[i+1]] != ORDER.EQUALS:
                                     print("ОШИБКА", item[i:i+2], "x ai b y")
+                                # print(item[i:i + 2], "x ai b y")
                                 self.operator_matrix[symbol][item[i+1]] = ORDER.EQUALS
                             elif i < len(item)-2 and item[i+1] not in MatrixGenerator.T and item[i+2] in MatrixGenerator.T:  # x ai U b y
                                 if self.operator_matrix[symbol].get(item[i+2]) is not None and self.operator_matrix[symbol][item[i+2]] != ORDER.EQUALS:
                                     print("ОШИБКА", item[i:i+3], "x ai U b y")
+                                # print(item[i:i + 3], "x ai U b y")
                                 self.operator_matrix[symbol][item[i+2]] = ORDER.EQUALS
 
                             if i < len(item)-1 and item[i+1] not in MatrixGenerator.T:  # x ai U y
-                                for L in self.symbols_lr.left[item[i+1]]:
+                                for L in self.t_lr.left[item[i+1]]:
                                     if L in MatrixGenerator.T:
                                         if self.operator_matrix[symbol].get(item[i + 1]) is not None and self.operator_matrix[symbol][item[i + 1]] != ORDER.PRECEDED:
                                             print("ОШИБКА", L, item[i:i + 2], "x ai U y")
+                                        # print(L, item[i:i + 2], "x ai U y")
                                         self.operator_matrix[symbol][L] = ORDER.PRECEDED
                                         continue
 
                             if i > 0 and item[i-1] not in MatrixGenerator.T:  # x U ai y
-                                for R in self.symbols_lr.right[item[i-1]]:
+                                for R in self.t_lr.right[item[i-1]]:
                                     if R in MatrixGenerator.T:
                                         if self.operator_matrix[symbol].get(item[i - 1]) is not None and self.operator_matrix[symbol][item[i - 1]] != ORDER.FOLLOWS:
                                             print("ОШИБКА", R, item[i - 1:i + 1], "x U ai y")
@@ -201,22 +198,22 @@ class MatrixGenerator:
         for s in self.t_lr.right[rule_names[0]]:
             self.operator_matrix[s]["/e/"] = ORDER.FOLLOWS
 
-        print("      ", end="")
+        print(" "*6, end="")
         for x in [*MatrixGenerator.T, "/e/"]:
             print("{0:<6}".format(x), end="")
         print()
-        for i in ["/b/", *MatrixGenerator.T]:
+        for i in [*MatrixGenerator.T, "/b/"]:
             print("{0:<6}".format(i), end="")
 
             for j in [*MatrixGenerator.T, "/e/"]:
                 if self.operator_matrix[i].get(j) is None:
-                    print(".     ", end="")
+                    print("." + " "*5, end="")
                 elif self.operator_matrix[i][j] == ORDER.PRECEDED:
-                    print("PRE   ", end="")
+                    print("<." + " "*4, end="")
                 elif self.operator_matrix[i][j] == ORDER.EQUALS:
-                    print("EQ    ", end="")
+                    print("=." + " "*4, end="")
                 elif self.operator_matrix[i][j] == ORDER.FOLLOWS:
-                    print("FOL   ", end="")
+                    print(".>" + " "*4, end="")
 
             print()
 

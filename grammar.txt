@@ -1,14 +1,35 @@
-P L Z I1 S I2 E1 E A X N I
-; + - * / > >= < <= = != , ( ) ? if else elseif for to do while begin end ass dim read output and or not ID TYPE BOOL NUM
+P L Z I1 S I2 E1 E A X
+; + - * / > >= < <= = != , ( ) { } ? if else elseif for to do while begin end ass dim read output and or not ID TYPE BOOL NUM
 P : L end
-L : S L | Z ; L | ?
-Z : dim ID I1 TYPE | I ass A | read ( I2 ) | output ( I2 )
+L : S } L | Z ; L | ?
+Z : dim ID I1 TYPE | ID ass A | read ( I2 ) | output ( I2 )
 I1 : , ID I1 | ?
-S : begin L end | if ( E ) L E1 end | if ( E ) L E1 else L end | do while ( E ) L end | for ( I ass N to N ) L end
+S : { L | if ( E ) { L } E1 | if ( E ) { L } E1 else { L } | do while ( E ) { L } | for ( ID ass NUM to NUM ) { L }
 I2 : ID I1
-E1 : elseif ( E ) L | ?
+E1 : elseif ( E ) { L } | ?
 E  : X | X = X | X != X | X < X | X <= X | X > X | X >= X | X and X | X or X | not X
 A : X | X + X | X - X | X * X | X / X
 X : NUM | ID | BOOL
-N : NUM
-I : ID
+
+
+if (bool)
+end
+
+if ()
+else
+end
+
+if ()
+elseif ()
+end
+
+if ()
+elseif ()
+...
+end
+
+if ()
+elseif ()
+...
+else
+end

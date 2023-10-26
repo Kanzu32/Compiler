@@ -1,0 +1,35 @@
+Program Block Decls Decl Type Stmts Stmt Exprs Expr Assignment_expr Logical_or_expr Logical_and_expr Equality_expr Relation_expr Addictive_expr Multiplicative_expr Unary_expr Postfix_expr Primary_expr Assignment_op Logical_or_op Logical_and_op Equality_op Relation_op Additive_op Multiplicative_op Prefix_op Postfix_op Loc_list Loc Const_list Const Number_const
++ - * / % && || != = == < > <= >= dim if else let foreach in while do readln write integer real boolean Id Boolean_const Integer_const Real_const ( ) { } , ; ! ++ -- E
+Program : Block
+Block : { Decls Stmts }
+Decls : Decl ; Decls | Decl | E
+Decl : dim Loc_list Type ;
+Type : integer | real | boolean
+Stmts : Stmt ; Stmts | Stmt | E
+Stmt : let Loc = Expr ; | Loc = Expr ; | if ( Expr ) Stmt ; | if ( Expr ) Stmt else Stmt ; | foreach Loc in ( Const_list ) Stmt ; | while Expr do Stmt ; | readln Loc_list ; | write ( Exprs ) ;
+Exprs : Expr | Expr , Exprs
+Expr : Assignment_expr
+Assignment_expr : let Loc Assignment_op Logical_or_expr | Loc Assignment_op Logical_or_expr
+Logical_or_expr : Logical_and_expr | Logical_or_expr Logical_or_op Logical_or_expr
+Logical_and_expr : Equality_expr | Logical_and_expr Logical_and_op Logical_and_expr
+Equality_expr : Relation_expr | Equality_expr Equality_op Relation_expr | Relation_expr Equality_op Equality_expr
+Relation_expr : Addictive_expr | Addictive_expr Relation_op Addictive_expr
+Addictive_expr : Multiplicative_expr | Addictive_expr Additive_op Addictive_expr
+Multiplicative_expr : Unary_expr | Multiplicative_expr Multiplicative_op Multiplicative_expr
+Unary_expr : Postfix_expr | Prefix_op Loc | - Unary_expr | + Unary_expr
+Postfix_expr : Primary_expr | Loc Postfix_op
+Primary_expr : Loc | Const
+Assignment_op : =
+Logical_or_op : ||
+Logical_and_op : &&
+Equality_op : == | !=
+Relation_op : < | <= | >= | >
+Additive_op : + | -
+Multiplicative_op : * | / | %
+Prefix_op : ++ | -- | + | -
+Postfix_op : ++ | --
+Loc_list : Loc | Loc , Loc_list
+Loc : Id
+Const_list : Const | Const , Const_list
+Const : Number_const | Boolean_const
+Number_const : Real_const | Integer_const

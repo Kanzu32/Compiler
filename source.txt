@@ -1,8 +1,8 @@
 dim aa1, bb2 %;
 if (aa1 >= 5)
-    aa1 ass 14.14
+    aa1 ass 14.14;
 else
-    bb2 ass 0
+    bb2 ass 0;
 end
 
 aa1 ass bb2 / aa1;
