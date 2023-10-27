@@ -4,8 +4,8 @@ S : S + T | T
 T : T * E | E
 E : ( S ) | a
 
-/b/ ASSIGN ; ID ass ANY
+/b/ CMD
 
-aa1 ass 45 * 10;
-
-bb2 ass aa1;
+for (ii1 ass 0 to 5) {
+    ff5 ass ii1 + 2;
+};
