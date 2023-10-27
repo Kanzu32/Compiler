@@ -29,7 +29,7 @@ class MatrixGenerator:
         self.input_stream = input_stream
         self.operator_matrix = {}
         self.error = False
-        self.error_msg = "OK"
+        self.error_msg = "Matrix generator: OK"
         self.rules = {}
         self.symbols_lr = LastSymbols()
         self.t_lr = LastSymbols()
@@ -39,11 +39,31 @@ class MatrixGenerator:
         self.error = True
         self.error_msg = "Matrix generator: " + msg
 
+    def print_matrix(self):
+        print(" " * 6, end="")
+        for x in [*MatrixGenerator.T, "/e/"]:
+            print("{0:<6}".format(x), end="")
+        print()
+        for i in [*MatrixGenerator.T, "/b/"]:
+            print("{0:<6}".format(i), end="")
+
+            for j in [*MatrixGenerator.T, "/e/"]:
+                if self.operator_matrix[i].get(j) is None:
+                    print("." + " " * 5, end="")
+                elif self.operator_matrix[i][j] == ORDER.PRECEDED:
+                    print("<." + " " * 4, end="")
+                elif self.operator_matrix[i][j] == ORDER.EQUALS:
+                    print("=." + " " * 4, end="")
+                elif self.operator_matrix[i][j] == ORDER.FOLLOWS:
+                    print(".>" + " " * 4, end="")
+
+            print()
+
     def generate(self):
-        rule_names = input_stream.readline().split()
+        rule_names = self.input_stream.readline().split()
         # MatrixGenerator.SYMBOLS = input_stream.readline().split()
         # MatrixGenerator.WORDS = input_stream.readline().split()
-        MatrixGenerator.T = input_stream.readline().split()
+        MatrixGenerator.T = self.input_stream.readline().split()
         for name in rule_names:  # инициализация имён
             self.rules[name] = []
             self.symbols_lr.left[name] = []
@@ -54,7 +74,7 @@ class MatrixGenerator:
         for symbol in ["/b/", *MatrixGenerator.T, "/e/"]:
             self.operator_matrix[symbol] = {}
 
-        lines = input_stream.read().split('\n')  # заполнение правил вывода
+        lines = self.input_stream.read().split('\n')  # заполнение правил вывода
         for line in lines:
             last_token_index = 0
             tokens = line.split()
@@ -198,24 +218,9 @@ class MatrixGenerator:
         for s in self.t_lr.right[rule_names[0]]:
             self.operator_matrix[s]["/e/"] = ORDER.FOLLOWS
 
-        print(" "*6, end="")
-        for x in [*MatrixGenerator.T, "/e/"]:
-            print("{0:<6}".format(x), end="")
-        print()
-        for i in [*MatrixGenerator.T, "/b/"]:
-            print("{0:<6}".format(i), end="")
+        # self.print_matrix()
+        return self.operator_matrix
 
-            for j in [*MatrixGenerator.T, "/e/"]:
-                if self.operator_matrix[i].get(j) is None:
-                    print("." + " "*5, end="")
-                elif self.operator_matrix[i][j] == ORDER.PRECEDED:
-                    print("<." + " "*4, end="")
-                elif self.operator_matrix[i][j] == ORDER.EQUALS:
-                    print("=." + " "*4, end="")
-                elif self.operator_matrix[i][j] == ORDER.FOLLOWS:
-                    print(".>" + " "*4, end="")
-
-            print()
 
 
 
@@ -223,8 +228,8 @@ class MatrixGenerator:
 if __name__ == "__main__":
     source_path = "grammar.txt"
 
-    input_stream = open(source_path, 'r')
-    gen = MatrixGenerator(input_stream)
+    stream = open(source_path, 'r')
+    gen = MatrixGenerator(stream)
     gen.generate()
     print(gen.error_msg)
 

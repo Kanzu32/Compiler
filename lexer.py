@@ -1,24 +1,24 @@
-import sys
-from sys import argv
-
 decrypt = ['NUM', 'REAL', 'ID', 'IF', 'ELSE', 'ELSEIF', 'FOR', 'TO', 'DO', 'WHILE', 'LPAR', 'RPAR', 'PLUS',
            'MINUS', 'GREAT', 'GREAT_EQUAL', 'LESS', 'LESS_EQUAL', 'EQUAL', 'NOTEQUAL', 'MULTIPLY', 'DIVIDE',
-           'SEMICOLON', 'DOT', 'COMMA', 'BEGIN', 'END', 'ASSUME', 'DIM', 'AND', 'OR', 'NOT', 'TRUE', 'FALSE', 'READ',
+           'SEMICOLON', 'DOT', 'COMMA', 'LBRA', 'RBRA', 'ASSUME', 'DIM', 'AND', 'OR', 'NOT', 'TRUE', 'FALSE', 'READ',
            'OUTPUT', 'INT', 'FLOAT', 'BOOL', 'EOF']
+
+decrypt_to_operators = ['NUM', 'NUM', 'ID', 'if', 'else', 'elseif', 'for', 'to', 'do', 'while', '(', ')', '+', '-',
+                        '>', '>=', '<', '<=', '=', '!=', '*', '/', ';', '.', ',', '{', '}', 'ass', 'dim', 'and', 'or',
+                        'not', 'true', 'false', 'read', 'output', 'TYPE', 'TYPE', 'TYPE', '/e/']
 
 
 class Lexer:
     (NUM, REAL, ID, IF, ELSE, ELSEIF, FOR, TO, DO, WHILE, LPAR, RPAR, PLUS, MINUS, GREAT, GREAT_EQUAL, LESS, LESS_EQUAL,
-     EQUAL, NOTEQUAL, MULTIPLY, DIVIDE, SEMICOLON, DOT, COMMA, BEGIN, END, ASSUME, DIM, AND, OR,
+     EQUAL, NOTEQUAL, MULTIPLY, DIVIDE, SEMICOLON, DOT, COMMA, LBRA, RBRA, ASSUME, DIM, AND, OR,
      NOT, TRUE, FALSE, READ, OUTPUT, INT, FLOAT, BOOL, EOF) = range(40)
 
     SYMBOLS = {';': SEMICOLON, '+': PLUS, '-': MINUS, '*': MULTIPLY, '/': DIVIDE, '>': GREAT, '>=': GREAT_EQUAL,
                '<': LESS, '<=': LESS_EQUAL, '=': EQUAL, '!=': NOTEQUAL, '.': DOT, ',': COMMA, '(': LPAR, ')': RPAR,
-               '%': INT, "!": FLOAT, '$': BOOL}
+               '{': LBRA, '}': RBRA, '%': INT, "!": FLOAT, '$': BOOL}
 
-    WORDS = {'if': IF, 'else': ELSE, 'elseif': ELSEIF, 'for': FOR, 'to': TO, 'do': DO, 'while': WHILE,
-             'begin': BEGIN, 'end': END, 'ass': ASSUME, 'dim': DIM, 'read': READ,
-             'output': OUTPUT, 'and': AND, 'or': OR, 'not': NOT, 'true': TRUE, 'false': FALSE}
+    WORDS = {'if': IF, 'else': ELSE, 'elseif': ELSEIF, 'for': FOR, 'to': TO, 'do': DO, 'while': WHILE, 'ass': ASSUME,
+             'dim': DIM, 'read': READ, 'output': OUTPUT, 'and': AND, 'or': OR, 'not': NOT, 'true': TRUE, 'false': FALSE}
 
     char = ' '
     lines_count = 1
@@ -28,11 +28,11 @@ class Lexer:
         self.value = None
         self.input_stream = input_stream
         self.error = False
-        self.error_msg = "OK"
+        self.error_msg = "Lexer: OK"
 
     def set_error(self, msg):
         self.error = True
-        self.error_msg = "Lexer error: " + msg
+        self.error_msg = "Lexer: " + msg
 
 
     def getc(self):
@@ -119,12 +119,7 @@ class Lexer:
 
 
 if __name__ == "__main__":
-    source_path: str
-
-    if len(argv) > 1:
-        source_path = argv[1]
-    else:
-        source_path = "source.txt"
+    source_path = "source.txt"
 
     stream = open(source_path, 'r')
 
@@ -138,4 +133,5 @@ if __name__ == "__main__":
             print(decrypt[lex.symbol], lex.value)
         else:
             print(decrypt[lex.symbol])
+        # print(decrypt_to_operators[lex.symbol], end=" ")
 

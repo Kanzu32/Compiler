@@ -1,11 +1,3 @@
-dim aa1, bb2 %;
-if (aa1 >= 5)
-    aa1 ass 14.14;
-else
-    bb2 ass 0;
-end
-
-aa1 ass bb2 / aa1;
-output (bb2);
-output (aa1);
-end
+for (ii1 ass 0 to bb2) {
+    aa1 ass ii1;
+};
