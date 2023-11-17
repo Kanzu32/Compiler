@@ -53,7 +53,7 @@ class Parser:
                         rule.append(self.stack.pop())
                     find = False
                     rule.reverse()
-                    print("RULE:", rule)
+                    # print("RULE:", rule)
                     for name in self.rules.keys():
                         for r in self.rules[name]:
                             if rule == r:
@@ -65,14 +65,14 @@ class Parser:
                     if not find:
                         self.set_error("Unable to locate rule " + " ".join(rule))
                         break
-                    print("NAME:", name)
-                    print(self.stack)
+                    # print("NAME:", name)
+                    # print(self.stack)
 
                 elif self.operator_matrix[self.get_t(2)][self.get_t()] == matrix.ORDER.EQUALS:
                     count = 2
                     while self.operator_matrix[self.get_t(count+1)][self.get_t(count)] == matrix.ORDER.EQUALS:
                         count += 1
-                    print(count)
+                    # print(count)
                     while True:
                         if self.stack[-1] in self.t:
                             if count == 0:
@@ -81,7 +81,7 @@ class Parser:
                         rule.append(self.stack.pop())
                     find = False
                     rule.reverse()
-                    print("RULE:", rule)
+                    # print("RULE:", rule)
                     for name in self.rules.keys():
                         for r in self.rules[name]:
                             if rule == r:
@@ -93,8 +93,8 @@ class Parser:
                     if not find:
                         self.set_error("Unable to locate rule " + " ".join(rule))
                         break
-                    print("NAME:", name)
-                    print(self.stack)
+                    # print("NAME:", name)
+                    # print(self.stack)
 
 if __name__ == "__main__":
     source_path = "grammar.txt"

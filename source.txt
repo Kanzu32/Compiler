@@ -1,3 +1,4 @@
-for (ii1 ass 0 to bb2) {
-    aa1 ass ii1;
+dim aa1, ii2, jj6 %;
+if (aa1 < ii2) {
+    aa1 ass 5;
 };
