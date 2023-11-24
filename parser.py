@@ -58,7 +58,7 @@ class Parser:
                         for r in self.rules[name]:
                             if rule == r:
                                 find = True
-                                self.stack.append(name)
+                                self.stack.append("E")
                                 break
                         if find:
                             break
@@ -86,7 +86,7 @@ class Parser:
                         for r in self.rules[name]:
                             if rule == r:
                                 find = True
-                                self.stack.append(name)
+                                self.stack.append("E")
                                 break
                         if find:
                             break

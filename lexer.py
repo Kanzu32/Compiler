@@ -1,24 +1,23 @@
-decrypt = ['NUM', 'REAL', 'ID', 'IF', 'ELSE', 'ELSEIF', 'FOR', 'TO', 'DO', 'WHILE', 'LPAR', 'RPAR', 'PLUS',
-           'MINUS', 'GREAT', 'GREAT_EQUAL', 'LESS', 'LESS_EQUAL', 'EQUAL', 'NOTEQUAL', 'MULTIPLY', 'DIVIDE',
-           'SEMICOLON', 'DOT', 'COMMA', 'LBRA', 'RBRA', 'ASSIGN', 'DIM', 'AND', 'OR', 'NOT', 'TRUE', 'FALSE', 'READ',
-           'OUTPUT', 'INT', 'FLOAT', 'BOOL', 'EOF']
+decrypt = ['NUM', 'REAL', 'ID', 'if', 'else', 'elseif', 'for', 'to', 'do', 'while', '(', ')', '+', '-',
+           '>', '>=', '<', '<=', '=', '!=', '*', '/', ';', '.', ',', '{', '}', 'ass', 'dim', 'and', 'or',
+           'not', 'BOOL_VAL', 'read', 'output', 'INT', 'FLOAT', 'BOOL', 'EOF']
 
 decrypt_to_operators = ['NUM', 'NUM', 'ID', 'if', 'else', 'elseif', 'for', 'to', 'do', 'while', '(', ')', '+', '-',
                         '>', '>=', '<', '<=', '=', '!=', '*', '/', ';', '.', ',', '{', '}', 'ass', 'dim', 'and', 'or',
-                        'not', 'true', 'false', 'read', 'output', 'TYPE', 'TYPE', 'TYPE', '/e/']
+                        'not', 'BOOL', 'read', 'output', 'TYPE', 'TYPE', 'TYPE', '/e/']
 
 
 class Lexer:
     (NUM, REAL, ID, IF, ELSE, ELSEIF, FOR, TO, DO, WHILE, LPAR, RPAR, PLUS, MINUS, GREAT, GREAT_EQUAL, LESS, LESS_EQUAL,
      EQUAL, NOTEQUAL, MULTIPLY, DIVIDE, SEMICOLON, DOT, COMMA, LBRA, RBRA, ASSIGN, DIM, AND, OR,
-     NOT, TRUE, FALSE, READ, OUTPUT, INT, FLOAT, BOOL, EOF) = range(40)
+     NOT, BOOL_VAL, READ, OUTPUT, INT, FLOAT, BOOL, EOF) = range(39)
 
     SYMBOLS = {';': SEMICOLON, '+': PLUS, '-': MINUS, '*': MULTIPLY, '/': DIVIDE, '>': GREAT, '>=': GREAT_EQUAL,
                '<': LESS, '<=': LESS_EQUAL, '=': EQUAL, '!=': NOTEQUAL, '.': DOT, ',': COMMA, '(': LPAR, ')': RPAR,
                '{': LBRA, '}': RBRA, '%': INT, "!": FLOAT, '$': BOOL}
 
     WORDS = {'if': IF, 'else': ELSE, 'elseif': ELSEIF, 'for': FOR, 'to': TO, 'do': DO, 'while': WHILE, 'ass': ASSIGN,
-             'dim': DIM, 'read': READ, 'output': OUTPUT, 'and': AND, 'or': OR, 'not': NOT, 'true': TRUE, 'false': FALSE}
+             'dim': DIM, 'read': READ, 'output': OUTPUT, 'and': AND, 'or': OR, 'not': NOT, 'true': BOOL_VAL, 'false': BOOL_VAL}
 
     char = ' '
     lines_count = 1
@@ -95,6 +94,10 @@ class Lexer:
                     self.getc()
                 if identifier in Lexer.WORDS:
                     self.symbol = Lexer.WORDS[identifier]
+                    if identifier == "false":
+                        self.value = False
+                    elif identifier == "true":
+                        self.value = False
                 elif len(identifier) == 2 and self.char.isdigit():
                     identifier += self.char
                     self.getc()

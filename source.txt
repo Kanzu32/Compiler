@@ -1,4 +1,1 @@
-dim aa1, ii2, jj6 %;
-if (aa1 < ii2) {
-    aa1 ass 5;
-};
+ii1 + 5
