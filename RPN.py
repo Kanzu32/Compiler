@@ -2,38 +2,37 @@ class PRN:
 
     OPERANDS = ["ID", "NUM", "REAL", "BOOL_VAL"]
     UNARY = ["NOT"]
+    IGNORED = ["to", "do", "EOF"]
+    UNPRINTABLE = [";", "{", "(", "}", ")"]
     PRIORITY = {
-        "(":        [100, 0],
+        "(":        [2, 1],
         ")":        [0, 0],
         "+":        [5, 5],
         "-":        [5, 5],
-        ">":        [7, 7],
-        "<":        [7, 7],
-        ">=":       [0, 7],
-        "<=":       [0, 7],
-        "=":        [0, 7],
-        "!=":       [0, 7],
-        "*":        [0, 4],
-        "/":        [0, 4],
+        ">":        [5, 5],
+        "<":        [5, 5],
+        ">=":       [5, 5],
+        "<=":       [5, 5],
+        "=":        [5, 5],
+        "!=":       [5, 5],
+        "*":        [5, 5],
+        "/":        [5, 5],
         ";":        [0, 0],
-        ".":        [0, 0],
-        ",":        [0, 13],
-        "{":        [0, 0],
+        ",":        [5, 5],
+        "{":        [0, 1],
         "}":        [0, 0],
-        "if":       [0, 0],
-        "else":     [0, 0],
-        "elseif":   [0, 0],
-        "for":      [0, 0],
-        "to":       [0, 0],
-        "do":       [0, 0],
-        "while":    [0, 0],
-        "ass":      [0, 0],
-        "dim":      [0, 0],
-        "and":      [0, 0],
-        "or":       [0, 0],
-        "not":      [0, 0],
-        "read":     [0, 0],
-        "output":   [0, 0],
+        "if":       [0, 1],
+        "else":     [0, 1],
+        "elseif":   [0, 1],
+        "for":      [0, 1],
+        "while":    [0, 1],
+        "ass":      [2, 1],
+        "dim":      [2, 2],
+        "and":      [5, 5],
+        "or":       [5, 5],
+        "not":      [5, 5],
+        "read":     [2, 2],
+        "output":   [2, 2],
     }
 
     def __init__(self, operators):
@@ -51,17 +50,19 @@ class PRN:
         res = []
         for symbol in self.operators:
             if symbol[0] in self.OPERANDS:
-                self.stack.append(symbol[1])
+                res.append(symbol[1])
             else:
-                if symbol[0] in self.UNARY:
-                    res.append(symbol[0])
-                    res.append(self.stack.pop()[1])
+                if symbol[0] in self.IGNORED:
+                    continue
+                if len(self.stack) == 0 or self.PRIORITY[self.stack[-1]][1] < self.PRIORITY[symbol[0]][0]:
+                    self.stack.append(symbol[0])
                 else:
-                    res.append(symbol[0])
-                    res.append(self.stack.pop()[1])
-                    res.append(self.stack.pop()[1])
-
-
+                    stack_symbol = self.stack.pop()
+                    if stack_symbol not in self.UNPRINTABLE:
+                        res.append(stack_symbol)
+                    if symbol[0] not in self.UNPRINTABLE:
+                        self.stack.append(symbol[0])
+        print(self.stack)
         return res
 
 
