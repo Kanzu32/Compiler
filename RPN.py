@@ -1,11 +1,11 @@
 class PRN:
 
-    OPERANDS = ["ID", "NUM", "REAL", "BOOL_VAL"]
+    OPERANDS = ["ID", "NUM", "REAL", "BOOL_VAL", "INT", "FLOAT", "BOOL"]
     UNARY = ["NOT"]
     IGNORED = ["to", "do", "EOF"]
     UNPRINTABLE = [";", "{", "(", "}", ")"]
     PRIORITY = {
-        "(":        [2, 1],
+        "(":        [3, 1],
         ")":        [0, 0],
         "+":        [5, 5],
         "-":        [5, 5],
@@ -19,13 +19,13 @@ class PRN:
         "/":        [5, 5],
         ";":        [0, 0],
         ",":        [5, 5],
-        "{":        [0, 1],
+        "{":        [1, 1],
         "}":        [0, 0],
-        "if":       [0, 1],
-        "else":     [0, 1],
-        "elseif":   [0, 1],
-        "for":      [0, 1],
-        "while":    [0, 1],
+        "if":       [0, 2],
+        "else":     [0, 0],
+        "elseif":   [0, 2],
+        "for":      [0, 2],
+        "while":    [0, 2],
         "ass":      [2, 1],
         "dim":      [2, 2],
         "and":      [5, 5],
@@ -40,6 +40,10 @@ class PRN:
         self.error = False
         self.error_msg = "Reverse Polish notation: OK"
         self.stack = []
+        self.end_stack = []
+        self.if_stack = []
+        self.if_count = 0
+        self.end_count = 0
 
 
     def set_error(self, msg):
@@ -48,21 +52,71 @@ class PRN:
 
     def convert(self):
         res = []
-        for symbol in self.operators:
-            if symbol[0] in self.OPERANDS:
-                res.append(symbol[1])
+        for i in range(len(self.operators)):
+            print("OPERATOR:", self.operators[i][0])
+            if self.operators[i][0] in self.OPERANDS:
+                res.append(self.operators[i][0])
+                print("OPERAND")
             else:
-                if symbol[0] in self.IGNORED:
+                if self.operators[i][0] == "if" or self.operators[i][0] == "for" or self.operators[i][0] == "while":
+                    self.end_stack.append("END" + str(self.end_count))
+                    self.end_count += 1
+                if self.operators[i][0] in self.IGNORED:
+                    print("CONTINUE WITH: " + self.operators[i][0])
                     continue
-                if len(self.stack) == 0 or self.PRIORITY[self.stack[-1]][1] < self.PRIORITY[symbol[0]][0]:
-                    self.stack.append(symbol[0])
+                if len(self.stack) == 0 or self.PRIORITY[self.stack[-1]][1] < self.PRIORITY[self.operators[i][0]][0]:
+                    print("STACK:", len(self.stack))
+                    self.stack.append(self.operators[i][0])
                 else:
-                    stack_symbol = self.stack.pop()
-                    if stack_symbol not in self.UNPRINTABLE:
-                        res.append(stack_symbol)
-                    if symbol[0] not in self.UNPRINTABLE:
-                        self.stack.append(symbol[0])
-        print(self.stack)
+                    stack_symbol = ""
+                    if self.operators[i][0] == ")":
+                        while stack_symbol != "(":
+                            stack_symbol = self.stack.pop()
+                            if stack_symbol not in self.UNPRINTABLE:
+                                if stack_symbol == "elseif":
+                                    stack_symbol = "if"
+                                res.append(stack_symbol)
+                        stack_symbol = self.stack.pop()
+                        if stack_symbol == "if" or stack_symbol == "else" or stack_symbol == "elseif":
+                            self.if_stack.append("M" + str(self.if_count))
+                            self.if_count += 1
+                            res.append("[" + self.if_stack[-1] + "]")
+                        if stack_symbol not in self.UNPRINTABLE:
+                            res.append(stack_symbol)
+                    if self.operators[i][0] == "}":
+                        while stack_symbol != "{":
+                            stack_symbol = self.stack.pop()
+                            if stack_symbol not in self.UNPRINTABLE:
+                                if stack_symbol == "elseif":
+                                    stack_symbol = "if"
+                                res.append(stack_symbol)
+                        if len(self.stack) == 0 or self.stack[-1] != "else":
+                            res.append("[" + self.end_stack[-1] + "]")
+                            res.append("(" + self.if_stack.pop() + ")")
+                        else:
+                            # stack_symbol = self.stack.pop()
+                            # res.append(stack_symbol)
+                            res.append("(" + self.end_stack.pop() + ")")
+
+                    if self.operators[i][0] == ";":
+                        while stack_symbol != "{" and len(self.stack) != 0:
+                            stack_symbol = self.stack.pop()
+                            if stack_symbol not in self.UNPRINTABLE:
+                                if stack_symbol == "elseif":
+                                    stack_symbol = "if"
+                                res.append(stack_symbol)
+                        if stack_symbol == "{":
+                            self.stack.append(stack_symbol)
+
+                # if self.operators[i][0] == "}" and self.operators[i+1][0] == ";":
+                #     res.append("(" + self.end_stack.pop() + ")")
+
+            print(self.stack)
+            print(res)
+            print("---")
+
+
+
         return res
 
 

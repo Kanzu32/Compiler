@@ -1,8 +1,18 @@
 dim ii1 %;
 if (ii1 > 0) {
     ii1 ass 8;
+}
+elseif (ii1 = 0) {
+    ii1 ass 10;
+}
+else {
+    ii1 ass 0;
 };
 /*
+
+
+['ID', 'INT', 'dim', 'ID', 'NUM', '>', 'ID', 'NUM', 'ass', '[END0]', 'if', 'ID', 'NUM', '=', 'ID', 'NUM', 'ass', '[END0]', 'if', 'ID', 'NUM', 'ass', '(END0)', 'else']
+['ID', 'INT', 'dim', 'ID', 'NUM', '>', 'if', 'ID', 'NUM', 'ass', '[END0]'
 input()
 for (ii1 ass 1 to 5) {}
 ii1 1 ass 5 [M] for [3 параметра идентификатор, граница, метка]
