@@ -1,10 +1,13 @@
 class PRN:
 
-    OPERANDS = ["ID", "NUM", "REAL", "BOOL_VAL", "INT", "FLOAT", "BOOL"]
+    OPERANDS = ["ID", "NUM", "REAL", "BOOL_VAL"]
     UNARY = ["NOT"]
     IGNORED = ["to", "do", "EOF"]
     UNPRINTABLE = [";", "{", "(", "}", ")"]
     PRIORITY = {
+        "INT":      [2, 2],
+        "FLOAT":    [2, 2],
+        "BOOL":     [2, 2],
         "(":        [3, 1],
         ")":        [0, 0],
         "+":        [5, 5],
@@ -18,14 +21,14 @@ class PRN:
         "*":        [5, 5],
         "/":        [5, 5],
         ";":        [0, 0],
-        ",":        [5, 5],
-        "{":        [1, 1],
+        ",":        [3, 2],
+        "{":        [1, 0],
         "}":        [0, 0],
-        "if":       [0, 2],
-        "else":     [0, 0],
-        "elseif":   [0, 2],
-        "for":      [0, 2],
-        "while":    [0, 2],
+        "if":       [1, 2],
+        "else":     [1, 0],
+        "elseif":   [1, 2],
+        "for":      [1, 2],
+        "while":    [1, 2],
         "ass":      [2, 1],
         "dim":      [2, 2],
         "and":      [5, 5],
@@ -107,6 +110,16 @@ class PRN:
                                 res.append(stack_symbol)
                         if stack_symbol == "{":
                             self.stack.append(stack_symbol)
+
+                    if self.operators[i][0] == "INT" or self.operators[i][0] == "FLOAT" or self.operators[i][0] == "BOOL":
+                        stack_symbol = self.stack.pop()
+                        while stack_symbol == ",":
+                            res.append(stack_symbol)
+                            stack_symbol = self.stack.pop()
+                        self.stack.append(stack_symbol)
+                        res.append(self.operators[i][0])
+
+
 
                 # if self.operators[i][0] == "}" and self.operators[i+1][0] == ";":
                 #     res.append("(" + self.end_stack.pop() + ")")

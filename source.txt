@@ -1,6 +1,10 @@
-dim ii1 %;
+dim ii1, aa1, bb5, cc1 %;
+read(aa1, cc1, bb5);
 if (ii1 > 0) {
     ii1 ass 8;
+    if (ii1 < 0) {
+        ii1 ass 10;
+    };
 }
 elseif (ii1 = 0) {
     ii1 ass 10;
@@ -9,6 +13,8 @@ else {
     ii1 ass 0;
 };
 /*
+
+
 
 
 ['ID', 'INT', 'dim', 'ID', 'NUM', '>', 'ID', 'NUM', 'ass', '[END0]', 'if', 'ID', 'NUM', '=', 'ID', 'NUM', 'ass', '[END0]', 'if', 'ID', 'NUM', 'ass', '(END0)', 'else']

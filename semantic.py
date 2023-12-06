@@ -2,9 +2,8 @@ import lexer
 
 
 class Variable:
-    def __init__(self, type, value=None):
+    def __init__(self, type):
         self.type = type
-        self.value = value
 
 
 class Operator:
@@ -15,6 +14,8 @@ class Operator:
 
 
 class Semantic:
+    RETURN_BOOL = [">", ">=", "<", "<=", "=", "!=", "and", "or", "not"]
+    RETURN_NUM = ["+", "-", "*", "/"]
 
     def __init__(self, operators):
         self.operators: list[Operator] = operators
@@ -45,25 +46,47 @@ class Semantic:
 
                 id_type = self.variables[self.operators[i].value].type
                 const_type = lexer.decrypt[self.operators[i + 2].type]
+                operation_return = lexer.decrypt[self.operators[i + 3].type]
 
-                if not ((id_type == "INT" and const_type == "NUM") or (id_type == "FLOAT" and const_type == "REAL") or
+                if operation_return == ";":
+
+                    if const_type == "ID" and self.operators[i].type != id_type:
+                        print("ID SEMANTIC")
+                        self.error = True
+                        self.error_msg = ("Wrong type: " + self.operators[i].value + " is " +
+                                          id_type + " unable to assign " +
+                                          const_type + " type")
+                        break
+
+                    if not ((id_type == "INT" and const_type == "NUM") or (id_type == "FLOAT" and const_type == "REAL") or
                         (id_type == "BOOL" and (const_type == "FALSE" or const_type == "TRUE"))):
 
-                    print(self.variables[self.operators[i].value].type, lexer.decrypt[self.operators[i + 2].type])
+                        print("CONST SEMANTIC")
+                        self.error = True
+                        self.error_msg = ("Wrong type: " + self.operators[i].value + " is " +
+                                          id_type + " unable to assign " +
+                                          const_type + " type")
+                        break
+
+                elif operation_return != ";" and not ((id_type == "INT" or id_type == "FLOAT") and operation_return in
+                        self.RETURN_NUM) or not (id_type == "BOOL" and operation_return in self.RETURN_BOOL):
+
+                    print("OPERATOR SEMANTIC")
                     self.error = True
-                    self.error_msg = ("Wrong type: " + self.operators[i].value + " is " +
-                                      lexer.decrypt[self.operators[i].type] + " unable to assign " +
-                                      lexer.decrypt[self.operators[i + 2].type] + " type")
-                else:
-                    self.variables[self.operators[i].value].value = self.operators[i + 2].value
+                    self.error_msg = ("Wrong type: " + self.operators[i].value + " is " + id_type
+                                      + " unable to assign " + operation_return + " type")
+
+
+                # else:
+                #     self.variables[self.operators[i].value].value = self.operators[i + 2].value
 
             elif self.operators[i].type == lexer.Lexer.ID:
                 if self.variables.get(self.operators[i].value) is None:
                     self.error = True
                     self.error_msg = "Undeclared variable " + self.operators[i].value
-                elif self.variables[self.operators[i].value].value is None:
-                    self.error = True
-                    self.error_msg = "Uninitialized variable " + self.operators[i].value
+                # elif self.variables[self.operators[i].value].value is None:
+                #     self.error = True
+                #     self.error_msg = "Uninitialized variable " + self.operators[i].value
             i += 1
 
         for name in self.variables.keys():

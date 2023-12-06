@@ -9,5 +9,5 @@ ASSIGN : ID ass CALC | ID ass ANY | ID ass I
 FORCOND : ASSIGN to COND | ASSIGN to ANY | ASSIGN to I
 COND1 : elseif ( COND ) { CMD } else { CMD } | elseif ( COND ) { CMD } COND1 | elseif ( COND ) { CMD }
 COND  : ANY = ANY | ANY != ANY | ANY < ANY | ANY <= ANY | ANY > ANY | ANY >= ANY | ANY and ANY | ANY or ANY | not ANY | not ID | ANY = ID | ANY != ID | ANY < ID | ANY <= ID | ANY > ID | ANY >= ID | ANY and ID | ANY or ID | ID = ANY | ID != ANY | ID < ANY | ID <= ANY | ID > ANY | ID >= ANY | ID and ANY | ID or ANY | ID = ID | ID != ID | ID < ID | ID <= ID | ID > ID | ID >= ID | ID and ID | ID or ID
-CALC : ANY + ANY | ANY - ANY | ANY * ANY | ANY / ANY | ANY + ID | ANY - ID | ANY * ID | ANY / ID | ID + ANY | ID - ANY | ID * ANY | ID / ANY
+CALC : ANY + ANY | ANY - ANY | ANY * ANY | ANY / ANY | ANY + ID | ANY - ID | ANY * ID | ANY / ID | ID + ANY | ID - ANY | ID * ANY | ID / ANY | ID + ID | ID - ID | ID * ID | ID / ID
 ANY : NUM | BOOL

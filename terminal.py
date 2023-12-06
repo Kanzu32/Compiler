@@ -49,7 +49,18 @@ print(pars.error_msg)
 # sem = semantic.Semantic(operators_semantic)
 # sem.check()
 # print(sem.error_msg)
+
+# i = 0
+# while i < len(operator_values):
+#     if operator_values[i][0] == ",":
+#         operator_values[i-1][0] += " " + operator_values[i+1][0]
+#         operator_values.pop(i)
+#         operator_values.pop(i)
+#     else:
+#         i += 1
+
 print(operator_values)
 rpn = RPN.PRN(operator_values)
 res = rpn.convert()
+print()
 print(res)
