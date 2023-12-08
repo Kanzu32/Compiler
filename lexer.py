@@ -51,11 +51,33 @@ class Lexer:
             elif self.char in Lexer.SYMBOLS:
                 new_symbol = self.char
                 self.getc()
-                new_symbol += self.char
-                if new_symbol in Lexer.SYMBOLS:
-                    self.symbol = Lexer.SYMBOLS[new_symbol]
+                double_symbol = new_symbol + self.char
+                if new_symbol == '-':
+                    if self.char.isdigit():
+                        intval = int(self.char)
+                        self.getc()
+                        while self.char.isdigit():
+                            intval = intval * 10 + int(self.char)
+                            self.getc()
+                        if self.char == '.':
+                            floatval = 0
+                            count = 1
+                            self.getc()
+                            while self.char.isdigit():
+                                floatval = floatval + int(self.char) / (10 ** count)
+                                count += 1
+                                self.getc()
+                            self.value = -(intval + floatval)
+                            self.symbol = Lexer.REAL
+                        else:
+                            self.value = -intval
+                            self.symbol = Lexer.NUM
+                    else:
+                        self.symbol = Lexer.SYMBOLS[new_symbol]
+                elif double_symbol in Lexer.SYMBOLS:
+                    self.symbol = Lexer.SYMBOLS[double_symbol]
                     self.getc()
-                elif new_symbol == '/*':
+                elif double_symbol == '/*':
                     out_char = ''
                     while out_char != '*/':
                         self.getc()

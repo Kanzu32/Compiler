@@ -1,28 +1,43 @@
-dim ii1, aa1, bb5, cc1 %;
-read(aa1, cc1, bb5);
+dim ii1, aa1 %;
+dim bb2 $;
+aa1 ass bb2 + ii1;
+aa1 ass aa1 - 2;
+do while (aa1 > 0) {
+    aa1 ass aa1 - 1;
+};
+
 if (ii1 > 0) {
     ii1 ass 8;
     if (ii1 < 0) {
         ii1 ass 10;
+    } elseif (ii1 > 1) {
+        read(ii1);
     };
-}
-elseif (ii1 = 0) {
-    ii1 ass 10;
-}
-else {
+} else {
     ii1 ass 0;
 };
 /*
 
 
-
-
-['ID', 'INT', 'dim', 'ID', 'NUM', '>', 'ID', 'NUM', 'ass', '[END0]', 'if', 'ID', 'NUM', '=', 'ID', 'NUM', 'ass', '[END0]', 'if', 'ID', 'NUM', 'ass', '(END0)', 'else']
-['ID', 'INT', 'dim', 'ID', 'NUM', '>', 'if', 'ID', 'NUM', 'ass', '[END0]'
 input()
 for (ii1 ass 1 to 5) {}
 ii1 1 ass 5 [M] for [3 параметра идентификатор, граница, метка]
+
+если for - след. ID - target
+              (M1) НЕТ - [END]
+for (ii1 ass 1 to 5) {
+    ""
+    [M1]
+}
+(END)
+
+ii1 1 ass (M1) ii1 5 [END] for "" [M1] (END)
+
 do while (ii1 > 0) {}
+
+(M1) ii1 0 > [END] while "" [M1] (END)
+
+
 M1
 dim ii1, ii2 %
 ii1 ii1 , % dim [2 аргумента список, тип]

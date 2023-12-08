@@ -46,9 +46,9 @@ for rule_name in rules.keys():
 pars = parser.Parser(gen.operator_matrix, operators, rules)
 pars.check()
 print(pars.error_msg)
-# sem = semantic.Semantic(operators_semantic)
-# sem.check()
-# print(sem.error_msg)
+sem = semantic.Semantic(operators_semantic)
+sem.check()
+print(sem.error_msg)
 
 # i = 0
 # while i < len(operator_values):
@@ -59,8 +59,8 @@ print(pars.error_msg)
 #     else:
 #         i += 1
 
-print(operator_values)
-rpn = RPN.PRN(operator_values)
-res = rpn.convert()
-print()
-print(res)
+# print(operator_values)
+# rpn = RPN.PRN(operator_values)
+# res = rpn.convert()
+# print()
+# print(res)

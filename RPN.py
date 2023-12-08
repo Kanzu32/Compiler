@@ -2,8 +2,8 @@ class PRN:
 
     OPERANDS = ["ID", "NUM", "REAL", "BOOL_VAL"]
     UNARY = ["NOT"]
-    IGNORED = ["to", "do", "EOF"]
-    UNPRINTABLE = [";", "{", "(", "}", ")"]
+    IGNORED = ["EOF", "do"]
+    UNPRINTABLE = [";", "{", "(", "}", ")", "to"]
     PRIORITY = {
         "INT":      [2, 2],
         "FLOAT":    [2, 2],
@@ -36,6 +36,7 @@ class PRN:
         "not":      [5, 5],
         "read":     [2, 2],
         "output":   [2, 2],
+        "to":       [0, 0],
     }
 
     def __init__(self, operators):
@@ -47,6 +48,8 @@ class PRN:
         self.if_stack = []
         self.if_count = 0
         self.end_count = 0
+        self.target_counter = ""
+        self.cycle_stack = []
 
 
     def set_error(self, msg):
@@ -58,12 +61,19 @@ class PRN:
         for i in range(len(self.operators)):
             print("OPERATOR:", self.operators[i][0])
             if self.operators[i][0] in self.OPERANDS:
-                res.append(self.operators[i][0])
+                res.append(self.operators[i][1])
                 print("OPERAND")
             else:
+                if self.operators[i][0] == "for":
+                    self.target_counter = self.operators[i+2][1]
                 if self.operators[i][0] == "if" or self.operators[i][0] == "for" or self.operators[i][0] == "while":
                     self.end_stack.append("END" + str(self.end_count))
                     self.end_count += 1
+                    self.cycle_stack.append(self.operators[i][0])
+                if self.operators[i][0] == "do":
+                    self.if_stack.append("M" + str(self.if_count))
+                    self.if_count += 1
+                    res.append("(" + self.if_stack[-1] + ")")
                 if self.operators[i][0] in self.IGNORED:
                     print("CONTINUE WITH: " + self.operators[i][0])
                     continue
@@ -71,6 +81,7 @@ class PRN:
                     print("STACK:", len(self.stack))
                     self.stack.append(self.operators[i][0])
                 else:
+                    print("CYCLE:", self.cycle_stack)
                     stack_symbol = ""
                     if self.operators[i][0] == ")":
                         while stack_symbol != "(":
@@ -80,12 +91,15 @@ class PRN:
                                     stack_symbol = "if"
                                 res.append(stack_symbol)
                         stack_symbol = self.stack.pop()
-                        if stack_symbol == "if" or stack_symbol == "else" or stack_symbol == "elseif":
+                        if stack_symbol == "if" or stack_symbol == "else" or stack_symbol == "elseif":  # else????
                             self.if_stack.append("M" + str(self.if_count))
                             self.if_count += 1
                             res.append("[" + self.if_stack[-1] + "]")
+                        if stack_symbol == "for" or stack_symbol == "while":
+                            res.append("[" + self.end_stack[-1] + "]")
                         if stack_symbol not in self.UNPRINTABLE:
                             res.append(stack_symbol)
+
                     if self.operators[i][0] == "}":
                         while stack_symbol != "{":
                             stack_symbol = self.stack.pop()
@@ -93,13 +107,24 @@ class PRN:
                                 if stack_symbol == "elseif":
                                     stack_symbol = "if"
                                 res.append(stack_symbol)
-                        if len(self.stack) == 0 or self.stack[-1] != "else":
-                            res.append("[" + self.end_stack[-1] + "]")
-                            res.append("(" + self.if_stack.pop() + ")")
+
+                        if self.operators[i+1][0] == ";":
+
+                            cycle_type = self.cycle_stack.pop()
+
+                            if cycle_type == "for" or cycle_type == "while":
+                                res.append("[" + self.if_stack.pop() + "]")
+                                res.append("(" + self.end_stack.pop() + ")")
+
+                            if cycle_type == "if":
+                                res.append("(" + self.end_stack.pop() + ")")
+                                if len(self.stack) == 0 or self.stack[-1] != "else":
+                                    res.append("(" + self.if_stack.pop() + ")")
                         else:
                             # stack_symbol = self.stack.pop()
                             # res.append(stack_symbol)
-                            res.append("(" + self.end_stack.pop() + ")")
+                            res.append("[" + self.end_stack[-1] + "]")
+                            res.append("(" + self.if_stack.pop() + ")")
 
                     if self.operators[i][0] == ";":
                         while stack_symbol != "{" and len(self.stack) != 0:
@@ -118,6 +143,22 @@ class PRN:
                             stack_symbol = self.stack.pop()
                         self.stack.append(stack_symbol)
                         res.append(self.operators[i][0])
+
+                    if self.operators[i][0] == "to":
+                        while stack_symbol != "(":
+                            stack_symbol = self.stack.pop()
+                            if stack_symbol not in self.UNPRINTABLE:
+                                if stack_symbol == "elseif":
+                                    stack_symbol = "if"
+                                res.append(stack_symbol)
+                        self.stack.append(stack_symbol)
+                        self.if_stack.append("M" + str(self.if_count))
+                        self.if_count += 1
+                        res.append("[" + self.if_stack[-1] + "]")
+                        res.append(self.target_counter)
+
+
+
 
 
 
