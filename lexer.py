@@ -119,7 +119,7 @@ class Lexer:
                     if identifier == "false":
                         self.value = False
                     elif identifier == "true":
-                        self.value = False
+                        self.value = True
                 elif len(identifier) == 2 and self.char.isdigit():
                     identifier += self.char
                     self.getc()

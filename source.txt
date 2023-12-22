@@ -1,20 +1,11 @@
-dim ii1, aa1 %;
-dim bb2 $;
-aa1 ass bb2 + ii1;
-aa1 ass aa1 - 2;
-do while (aa1 > 0) {
-    aa1 ass aa1 - 1;
-};
-
-if (ii1 > 0) {
-    ii1 ass 8;
-    if (ii1 < 0) {
-        ii1 ass 10;
-    } elseif (ii1 > 1) {
-        read(ii1);
-    };
+dim aa1 %;
+aa1 ass 1;
+if (aa1 = 1) {
+    aa1 ass aa1 + 1;
+} elseif (aa1 < 0) {
+    aa1 ass -9;
 } else {
-    ii1 ass 0;
+    aa1 ass 0;
 };
 /*
 

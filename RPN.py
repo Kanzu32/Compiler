@@ -58,12 +58,19 @@ class PRN:
 
     def convert(self):
         res = []
+        declare_res = []
+        is_declare = False
         for i in range(len(self.operators)):
             print("OPERATOR:", self.operators[i][0])
             if self.operators[i][0] in self.OPERANDS:
-                res.append(self.operators[i][1])
+                if is_declare:
+                    declare_res.append(self.operators[i][1])
+                else:
+                    res.append(self.operators[i][1])
                 print("OPERAND")
             else:
+                if self.operators[i][0] == "dim":
+                    is_declare = True
                 if self.operators[i][0] == "for":
                     self.target_counter = self.operators[i+2][1]
                 if self.operators[i][0] == "if" or self.operators[i][0] == "for" or self.operators[i][0] == "while":
@@ -132,17 +139,21 @@ class PRN:
                             if stack_symbol not in self.UNPRINTABLE:
                                 if stack_symbol == "elseif":
                                     stack_symbol = "if"
-                                res.append(stack_symbol)
+                                if is_declare:
+                                    declare_res.append(stack_symbol)
+                                else:
+                                    res.append(stack_symbol)
+                        is_declare = False
                         if stack_symbol == "{":
                             self.stack.append(stack_symbol)
 
                     if self.operators[i][0] == "INT" or self.operators[i][0] == "FLOAT" or self.operators[i][0] == "BOOL":
                         stack_symbol = self.stack.pop()
                         while stack_symbol == ",":
-                            res.append(stack_symbol)
+                            declare_res.append(stack_symbol)
                             stack_symbol = self.stack.pop()
                         self.stack.append(stack_symbol)
-                        res.append(self.operators[i][0])
+                        declare_res.append(self.operators[i][0])
 
                     if self.operators[i][0] == "to":
                         while stack_symbol != "(":
@@ -158,20 +169,15 @@ class PRN:
                         res.append(self.target_counter)
 
 
-
-
-
-
                 # if self.operators[i][0] == "}" and self.operators[i+1][0] == ";":
                 #     res.append("(" + self.end_stack.pop() + ")")
 
-            print(self.stack)
+            # print(self.stack)
             print(res)
+            print(declare_res)
             print("---")
 
-
-
-        return res
+        return declare_res, res
 
 
 

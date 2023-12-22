@@ -3,6 +3,7 @@ import matrix
 import parser
 import semantic
 import RPN
+import ASM
 
 source_path = "source.txt"
 stream = open(source_path, 'r')
@@ -59,8 +60,11 @@ print(sem.error_msg)
 #     else:
 #         i += 1
 
-# print(operator_values)
-# rpn = RPN.PRN(operator_values)
-# res = rpn.convert()
+print(operator_values)
+rpn = RPN.PRN(operator_values)
+declare_res, res = rpn.convert()
 # print()
 # print(res)
+
+asm_gen = ASM.ASM(declare_res, res)
+asm_gen.generate()
