@@ -61,7 +61,7 @@ class Semantic:
                         break
 
                     if not ((id_type == "INT" and const_type == "NUM") or (id_type == "FLOAT" and const_type == "REAL") or
-                            (id_type == "BOOL" and (const_type == "FALSE" or const_type == "TRUE"))):
+                            (id_type == "BOOL" and const_type == "BOOL_VAL")):
 
                         print("CONST SEMANTIC")
                         self.error = True

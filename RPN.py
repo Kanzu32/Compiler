@@ -119,7 +119,17 @@ class PRN:
 
                             cycle_type = self.cycle_stack.pop()
 
-                            if cycle_type == "for" or cycle_type == "while":
+                            if cycle_type == "for":
+                                # ////
+                                res.append(self.target_counter)
+                                res.append(self.target_counter)
+                                res.append("1")
+                                res.append("+")
+                                res.append("ass")
+                                res.append("[" + self.if_stack.pop() + "]")
+                                res.append("(" + self.end_stack.pop() + ")")
+
+                            if cycle_type == "while":
                                 res.append("[" + self.if_stack.pop() + "]")
                                 res.append("(" + self.end_stack.pop() + ")")
 
@@ -165,7 +175,7 @@ class PRN:
                         self.stack.append(stack_symbol)
                         self.if_stack.append("M" + str(self.if_count))
                         self.if_count += 1
-                        res.append("[" + self.if_stack[-1] + "]")
+                        res.append("(" + self.if_stack[-1] + ")")
                         res.append(self.target_counter)
 
 

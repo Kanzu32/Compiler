@@ -172,7 +172,7 @@ class MatrixGenerator:
         # print(self.t_lr.right)
         #
         # print(self.rules)
-        # print("LEFT: ")
+        # print("LEFT: ")_
         # print(self.symbols_lr.left)
         # print("\nRIGHT: ")
         # print(self.symbols_lr.right)

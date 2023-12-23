@@ -35,7 +35,7 @@ class ASM:
             res += "\tmov dword[TMP], 0x" + single(second).hex()[0] + "\n\tfld dword[TMP]\n"
         return res
 
-    # TODO [",", "for", "while", "read", "output", "not"]
+    # TODO [",", "read", "output", "not"]
 
 
     def generate(self):
@@ -210,6 +210,24 @@ class ASM:
                 res += "label"+str(self.labels_count-1) + ":\n"
                 self.calced = False
 
+            elif el[0] == "[" and self.main_rpn[i+1] == "for":
+                second = self.stack.pop()
+                first = self.stack.pop()
+                res += "\tfinit\n"
+                res += "\tfld dword["+first+"]\n"
+                if second in self.var_names:
+                    res += "\tfld dword["+second+"]\n"
+                else:
+                    res += "\tmov dword[TMP], 0x" + single(second).hex()[0] + "\n\tfld dword[TMP]\n"
+                res += "\tfcomi\n"
+                res += "\tjz " + el[1:-1:] + "\n"
+
+            elif el[0] == "[" and self.main_rpn[i+1] == "while":
+                res += "\tfld dword[RES]\n"
+                res += "\tmov dword[TMP], 0x" + single(str(0)).hex()[0] + "\n\tfld dword[TMP]\n"
+                res += "\tfcomi\n"
+                res += "\tjz "+el[1:-1:]+"\n"
+
             elif el[0] == "[":
                 res += "\tjmp "+el[1:-1:]+"\n"
             elif el[0] == "(":
@@ -218,7 +236,7 @@ class ASM:
                 self.stack.append(el)
 
         res += "\tret\n"
-        print(res)
+        return res
 
 
 
