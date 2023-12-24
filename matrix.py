@@ -218,7 +218,7 @@ class MatrixGenerator:
         for s in self.t_lr.right[rule_names[0]]:
             self.operator_matrix[s]["/e/"] = ORDER.FOLLOWS
 
-        # self.print_matrix()
+        self.print_matrix()
         return self.operator_matrix
 
 

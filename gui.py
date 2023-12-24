@@ -1,5 +1,6 @@
 import PySimpleGUI as sg
 import io
+import os
 import lexer
 import matrix
 import parser
@@ -7,14 +8,14 @@ import semantic
 import RPN
 import ASM
 
-layout = [[sg.Text("Choose a file: "), sg.Input(), sg.FileBrowse(key="-IN-FILE-"), sg.Button("Load"), sg.Button('Compile', size=(12, 2), key="_COMPILE_")],
+# sg.theme('Black')
+layout = [[sg.Text("Choose a file: "), sg.Input(), sg.FileBrowse(key="-IN-FILE-"), sg.Button("Load"), sg.Button('Compile', size=(12, 2), key="_COMPILE_"), sg.Button('Build EXE', size=(12, 2), key="_BUILD_")],
           [sg.Text("Source code:", size=(46, 1)), sg.Text("Lexemes:", size=(45, 1)), sg.Text("Reverse Polish notation:", size=(45, 1)), sg.Text("Assembler (NASM):", size=(45, 1)),],
           [sg.Multiline(s=(50, 30), key="-INPUT-"), sg.Multiline(s=(50, 30), disabled=True, key="-LEXER-"), sg.Multiline(s=(50, 30), disabled=True, key="-RPN-"), sg.Multiline(s=(50, 30), disabled=True, key="-ASM-")],
           [sg.Text("Errors:")],
           [sg.Multiline(s=(50, 7), key="-ERROR-", disabled=True)]]
 
 window = sg.Window('Compiler', layout)
-
 
 def do_compile(stream):
     lex = lexer.Lexer(stream)
@@ -26,7 +27,6 @@ def do_compile(stream):
     while lex.symbol != lexer.Lexer.EOF:
         lex.next_token()
         if lex.error:
-            window["-ERROR-"].update(lex.error_msg)
             break
 
         operators.append(lexer.decrypt_to_operators[lex.symbol])
@@ -38,18 +38,21 @@ def do_compile(stream):
             operator_values.append([lexer.decrypt[lex.symbol]])
 
         if lex.symbol == lexer.Lexer.ID:
-            res += lexer.decrypt[lex.symbol] + ": " + str(lex.value) + "\n"
+            res += lexer.decrypt_to_lexemes[lex.symbol] + ": " + str(lex.value) + "\n"
         elif lex.symbol == lexer.Lexer.ID or lex.symbol == lexer.Lexer.NUM or lex.symbol == lexer.Lexer.REAL:
-            res += "CONSTANT: " + lexer.decrypt[lex.symbol] + "," + str(lex.value) + "\n"
+            res += "CONSTANT: " + lexer.decrypt_to_lexemes[lex.symbol] + "," + str(lex.value) + "\n"
         elif lex.symbol in lexer.Lexer.SYMBOLS.values() or lex.symbol == lexer.Lexer.EOF:
-            res += "SYMBOL: " + lexer.decrypt[lex.symbol] + "\n"
+            res += "SYMBOL: " + lexer.decrypt_to_lexemes[lex.symbol] + "\n"
         else:
-            res += "WORD: " + lexer.decrypt[lex.symbol] + "\n"
+            res += "WORD: " + lexer.decrypt_to_lexemes[lex.symbol] + "\n"
+    if lex.error:
+        window["-ERROR-"].update(lex.error_msg)
+        return
     window["-LEXER-"].update(res)
     err += lex.error_msg + "\n"
     stream.close()
 
-    source_path = "test.txt"
+    source_path = "grammar.txt"
     stream = open(source_path, 'r')
     gen = matrix.MatrixGenerator(stream)
     gen.generate()
@@ -72,10 +75,11 @@ def do_compile(stream):
         window["-ERROR-"].update(pars.error_msg)
         return
     err += pars.error_msg + "\n"
+
     sem = semantic.Semantic(operators_semantic)
     sem.check()
     if sem.error:
-        window["-ERROR-"].update(pars.error_msg)
+        window["-ERROR-"].update(sem.error_msg)
         return
     err += sem.error_msg + "\n"
 
@@ -110,7 +114,14 @@ while True:
     if event == "_COMPILE_":
         do_compile(io.StringIO(values["-INPUT-"]))
     elif event == "Load":
-        file = open(values["-IN-FILE-"])
-        window["-INPUT-"].update(file.read())
+        if values["-IN-FILE-"] != "":
+            file = open(values["-IN-FILE-"])
+            window["-INPUT-"].update(file.read())
+    elif event == "_BUILD_":
+        asm_file = open("asm.asm", "w")
+        asm_file.write(values["-ASM-"])
+        asm_file.close()
+        os.system('.\linker\SASM\\NASM\\nasm.exe --gprefix _ -f win32 asm.asm -o asm.obj')
+        os.system(".\linker\SASM\MinGW\\bin\gcc.exe asm.obj .\linker\SASM\\NASM\macro.o -g -o asm.exe -m32")
 
 window.close()

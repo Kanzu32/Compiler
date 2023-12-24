@@ -47,9 +47,9 @@ class Semantic:
                 const_type = lexer.decrypt[self.operators[i + 2].type]
                 operation_return = lexer.decrypt[self.operators[i + 3].type]
 
-                if operation_return == ";":
+                if operation_return == ";" or operation_return == "to":
 
-                    if const_type == "ID" and self.operators[i].type != id_type:
+                    if const_type == "ID" and self.variables[self.operators[i].value].type != id_type:
                         print("ID SEMANTIC")
                         self.error = True
                         if self.variables.get(self.operators[i + 2].value) is None:
@@ -60,9 +60,8 @@ class Semantic:
                                           self.variables[self.operators[i + 2].value].type + " type")
                         break
 
-                    if not ((id_type == "INT" and const_type == "NUM") or (id_type == "FLOAT" and const_type == "REAL") or
-                            (id_type == "BOOL" and const_type == "BOOL_VAL")):
-
+                    elif const_type != "ID" and not ((id_type == "INT" or id_type == "FLOAT") and (const_type == "NUM"
+                         or const_type == "REAL") or (id_type == "BOOL" and const_type == "BOOL_VAL")):
                         print("CONST SEMANTIC")
                         self.error = True
                         self.error_msg = ("Wrong type: " + self.operators[i].value + " is " +
@@ -72,7 +71,7 @@ class Semantic:
 
                 elif ((id_type == "INT" or id_type == "FLOAT") and operation_return not in
                         self.RETURN_NUM) or id_type == "BOOL" and operation_return not in self.RETURN_BOOL:
-
+                    print(operation_return)
                     print("OPERATOR SEMANTIC")
                     self.error = True
                     if operation_return in self.RETURN_NUM:

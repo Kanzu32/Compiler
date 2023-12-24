@@ -7,7 +7,7 @@ class ASM:
                  "elseif", "for", "while", "ass", "read", "output", "and", "or", "not"]
     def __init__(self, declare_rpn, main_rpn):
         self.error = False
-        self.error_msg = "OK"
+        self.error_msg = "Assembler generator: OK"
         self.declare_rpn = declare_rpn
         self.main_rpn = main_rpn
         self.variables = []
@@ -28,18 +28,33 @@ class ASM:
         if first in self.var_names:
             res += "\tfld dword[" + first + "]\n"
         else:
-            res += "\tmov dword[TMP], 0x" + single(first).hex()[0] + "\n\tfld dword[TMP]\n"
+            if first == "True":
+                res += "\tmov dword[TMP], TRUE\n\tfld dword[TMP]\n"
+            elif first == "False":
+                res += "\tmov dword[TMP], FALSE\n\tfld dword[TMP]\n"
+            else:
+                res += "\tmov dword[TMP], 0x" + single(first).hex()[0] + "\n\tfld dword[TMP]\n"
         if second in self.var_names:
             res += "\tfld dword[" + second + "]\n"
         else:
-            res += "\tmov dword[TMP], 0x" + single(second).hex()[0] + "\n\tfld dword[TMP]\n"
+            if second == "True":
+                res += "\tmov dword[TMP], TRUE\n\tfld dword[TMP]\n"
+            elif second == "False":
+                res += "\tmov dword[TMP], FALSE\n\tfld dword[TMP]\n"
+            else:
+                res += "\tmov dword[TMP], 0x" + single(second).hex()[0] + "\n\tfld dword[TMP]\n"
         return res
 
     # TODO [",", "read", "output", "not"]
 
-
     def generate(self):
-        res = "section .data\n\tZEROS equ 0x0\n\tFALSE equ 0x0\n\tTRUE equ 0x3f800000\n\tTMP dd 0.0\n\tRES dd ZEROS\n"
+        res = ('%include "io.inc"\n\n'
+               'section .data\n'
+               '\tZEROS equ 0x0\n'
+               '\tFALSE equ 0x0\n'
+               '\tTRUE equ 0x3f800000\n'
+               '\tTMP dd 0.0\n'
+               '\tRES dd ZEROS\n')
         for el in self.declare_rpn:
             if el == "," or el == "dim":
                 continue
@@ -89,7 +104,12 @@ class ASM:
                     second = self.stack.pop()
                     first = self.stack.pop()
                     if second in self.var_names:
-                        res += "\tmov dword[" + first + "], dword[" + second + "]\n"
+                        res += "\tmov eax, dword[" + second + "]\n"
+                        res += "\tmov dword["+first+"], eax\n"
+                    elif second == "False":
+                        res += "\tmov dword["+first+"], FALSE\n"
+                    elif second == "True":
+                        res += "\tmov dword["+first+"], TRUE\n"
                     else:
                         res += "\tmov dword["+first+"], 0x"+single(second).hex()[0]+"\n"
 
@@ -199,6 +219,32 @@ class ASM:
                 res += "\tmov dword[RES], eax\n"
                 self.calced = True
 
+            elif el == "output":
+                out_vars = []
+                count = 0
+                prev = self.stack.pop()
+                while prev == ",":
+                    count += 1
+                    prev = self.stack.pop()
+                out_vars.append(prev)
+                for _ in range(count):
+                    out_vars.append(self.stack.pop())
+                for var in out_vars[::-1]:
+                    res += "\tPRINT_HEX 4, "+var+"\n\tNEWLINE\n"
+
+            elif el == "read":
+                out_vars = []
+                count = 0
+                prev = self.stack.pop()
+                while prev == ",":
+                    count += 1
+                    prev = self.stack.pop()
+                out_vars.append(prev)
+                for _ in range(count):
+                    out_vars.append(self.stack.pop())
+                for var in out_vars[::-1]:
+                    res += "\tGET_HEX 4, "+var+"\n"
+
             elif el[0] == "[" and (self.main_rpn[i+1] == "if" or self.main_rpn[i+1] == "elseif"):
                 res += "\tfinit\n"
                 res += "\tfld dword[RES]\n"
@@ -223,6 +269,7 @@ class ASM:
                 res += "\tjz " + el[1:-1:] + "\n"
 
             elif el[0] == "[" and self.main_rpn[i+1] == "while":
+                res += "\tfinit\n"
                 res += "\tfld dword[RES]\n"
                 res += "\tmov dword[TMP], 0x" + single(str(0)).hex()[0] + "\n\tfld dword[TMP]\n"
                 res += "\tfcomi\n"

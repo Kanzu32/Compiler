@@ -29,7 +29,7 @@ while lex.symbol != lexer.Lexer.EOF:
 print(lex.error_msg)
 
 stream.close()
-source_path = "test.txt"
+source_path = "grammar.txt"
 stream = open(source_path, 'r')
 gen = matrix.MatrixGenerator(stream)
 gen.generate()

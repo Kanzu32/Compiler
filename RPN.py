@@ -182,11 +182,14 @@ class PRN:
                 # if self.operators[i][0] == "}" and self.operators[i+1][0] == ";":
                 #     res.append("(" + self.end_stack.pop() + ")")
 
-            # print(self.stack)
+
             print(res)
             print(declare_res)
             print("---")
 
+        if (len(self.stack) == 1 and self.stack[-1] != ";") and len(self.stack) > 0:
+            print("STACK ERROR:", self.stack)
+            self.set_error("Stack is not empty")
         return declare_res, res
 
 

@@ -6,6 +6,11 @@ decrypt_to_operators = ['NUM', 'NUM', 'ID', 'if', 'else', 'elseif', 'for', 'to',
                         '>', '>=', '<', '<=', '=', '!=', '*', '/', ';', '.', ',', '{', '}', 'ass', 'dim', 'and', 'or',
                         'not', 'BOOL', 'read', 'output', 'TYPE', 'TYPE', 'TYPE', '/e/']
 
+decrypt_to_lexemes = ["NUM", "REAL", "ID", "IF", "ELSE", "ELSEIF", "FOR", "TO", "DO", "WHILE", "LPAR", "RPAR", "PLUS",
+                      "MINUS", "GREAT", "GREAT_EQUAL", "LESS", "LESS_EQUAL", "EQUAL", "NOTEQUAL", "MULTIPLY", "DIVIDE",
+                      "SEMICOLON", "DOT", "COMMA", "LBRA", "RBRA", "ASSIGN", "DIM", "AND", "OR", "NOT", "BOOL_VAL",
+                      "READ", "OUTPUT", "INT", "FLOAT", "BOOL", "EOF"]
+
 
 class Lexer:
     (NUM, REAL, ID, IF, ELSE, ELSEIF, FOR, TO, DO, WHILE, LPAR, RPAR, PLUS, MINUS, GREAT, GREAT_EQUAL, LESS, LESS_EQUAL,

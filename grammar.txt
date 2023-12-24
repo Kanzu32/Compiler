@@ -1,12 +1,13 @@
-PROG CMD IDS EXPR ASSIGN FORCOND COND1 COND CALC ANY
+PROG CMD IDS I EXPR ASSIGN FORCOND COND1 COND CALC ANY
 ; + - * / > >= < <= = != , ( ) { } if else elseif for to do while ass dim read output and or not ID TYPE BOOL NUM
 PROG : CMD
 CMD : EXPR ; CMD | EXPR ; | ASSIGN ; CMD | ASSIGN ;
-IDS : IDS , ID | ID
+IDS : IDS , ID | I | I , ID
+I : ID
 EXPR : dim IDS TYPE | read ( IDS ) | output ( IDS ) | if ( COND ) { CMD } | if ( COND ) { CMD } else { CMD } | if ( COND ) { CMD } COND1 | do while ( COND ) { CMD } | for ( FORCOND ) { CMD }
-ASSIGN : ID ass CALC | ID ass ANY
-FORCOND : ASSIGN to CALC | ASSIGN to ANY
+ASSIGN : ID ass CALC | ID ass ANY | ID ass I | ID ass COND
+FORCOND : ASSIGN to ANY | ASSIGN to I
 COND1 : elseif ( COND ) { CMD } else { CMD } | elseif ( COND ) { CMD } COND1 | elseif ( COND ) { CMD }
-COND  : ANY = ANY | ANY != ANY | ANY < ANY | ANY <= ANY | ANY > ANY | ANY >= ANY | ANY and ANY | ANY or ANY | not ANY
-CALC : ANY + ANY | ANY - ANY | ANY * ANY | ANY / ANY
-ANY : NUM | ID | BOOL
+COND  : ANY = ANY | ANY != ANY | ANY < ANY | ANY <= ANY | ANY > ANY | ANY >= ANY | ANY and ANY | ANY or ANY | not ANY | not ID | ANY = ID | ANY != ID | ANY < ID | ANY <= ID | ANY > ID | ANY >= ID | ANY and ID | ANY or ID | ID = ANY | ID != ANY | ID < ANY | ID <= ANY | ID > ANY | ID >= ANY | ID and ANY | ID or ANY | ID = ID | ID != ID | ID < ID | ID <= ID | ID > ID | ID >= ID | ID and ID | ID or ID
+CALC : ANY + ANY | ANY - ANY | ANY * ANY | ANY / ANY | ANY + ID | ANY - ID | ANY * ID | ANY / ID | ID + ANY | ID - ANY | ID * ANY | ID / ANY | ID + ID | ID - ID | ID * ID | ID / ID
+ANY : NUM | BOOL
