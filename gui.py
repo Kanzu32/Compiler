@@ -121,7 +121,7 @@ while True:
         asm_file = open("asm.asm", "w")
         asm_file.write(values["-ASM-"])
         asm_file.close()
-        os.system('.\linker\SASM\\NASM\\nasm.exe --gprefix _ -f win32 asm.asm -o asm.obj')
-        os.system(".\linker\SASM\MinGW\\bin\gcc.exe asm.obj .\linker\SASM\\NASM\macro.o -g -o asm.exe -m32")
+        os.system('.\\NASM\\nasm.exe --gprefix _ -f win32 asm.asm -o asm.obj')
+        os.system(".\MinGW\\bin\gcc.exe asm.obj .\\NASM\macro.o -g -o asm.exe -m32")
 
 window.close()

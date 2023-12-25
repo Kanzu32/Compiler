@@ -1,2 +1,0 @@
-.\SASM\NASM\nasm.exe --gprefix _ -f win32 asm.asm -o asm.obj
-"C:\Users\Max\Desktop\link\SASM\MinGW\bin\gcc.exe" asm.obj "C:\Users\Max\Desktop\link\SASM\NASM\macro.o" -g -o asm.exe -m32

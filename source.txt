@@ -1,20 +1,7 @@
-dim kk1, kk2, bb1, bb2, xx1, yy1, tm1 !;
-dim sm1, pr1, eq1, eq2 $;
-kk1 ass 2;
-bb1 ass -1;
-kk2 ass -3;
-bb2 ass 1;
-eq1 ass kk1 = kk2;
-eq2 ass bb1 = bb2;
-if (eq1 and eq2) {
-    sm1 ass true;
-} elseif (eq1 = true) {
-    pr1 ass true;
-} else {
-    xx1 ass bb2 - bb1;
-    tm1 ass kk1 - kk2;
-    xx1 ass xx1 / tm1;
-    yy1 ass kk1 * xx1;
-    yy1 ass yy1 + bb1;
+dim ii1, aa1 !;
+do while (ii1 < 1) {
+    aa1 ass 1;
 };
-output(xx1, yy1);
+for (ii1 ass 1 to 10) {
+    aa1 ass 9;
+}
