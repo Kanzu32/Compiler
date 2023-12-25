@@ -83,7 +83,7 @@ def do_compile(stream):
         return
     err += sem.error_msg + "\n"
 
-    rpn = RPN.PRN(operator_values)
+    rpn = RPN.RPN(operator_values)
     declare_res, res = rpn.convert()
     if rpn.error:
         window["-ERROR-"].update(rpn.error_msg)

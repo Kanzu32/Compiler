@@ -61,7 +61,7 @@ print(sem.error_msg)
 #         i += 1
 
 print(operator_values)
-rpn = RPN.PRN(operator_values)
+rpn = RPN.RPN(operator_values)
 declare_res, res = rpn.convert()
 # print()
 # print(res)

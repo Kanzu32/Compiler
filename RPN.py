@@ -1,4 +1,4 @@
-class PRN:
+class RPN:
 
     OPERANDS = ["ID", "NUM", "REAL", "BOOL_VAL"]
     UNARY = ["NOT"]
